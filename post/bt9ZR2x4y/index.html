@@ -1,0 +1,595 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Vitis HLS 实现手写数字识别 | Ayanami&#39;s blog</title>
+<meta name="description" content="Life feeds on negative entropy" />
+<link rel="shortcut icon" href="https://SylvanasQAQ.github.io/favicon.ico">
+<link rel="stylesheet" href="https://SylvanasQAQ.github.io/styles/main.css">
+
+<script src="https://SylvanasQAQ.github.io/media/js/jquery.min.js"></script>
+<script src="https://SylvanasQAQ.github.io/media/js/masonry.pkgd.min.js"></script>
+<script src="https://SylvanasQAQ.github.io/media/js/aos.js"></script>
+<script src="https://SylvanasQAQ.github.io/media/js/pace.min.js"></script>
+<script src="https://SylvanasQAQ.github.io/media/js/view-image.min.js"></script>
+<script src="https://SylvanasQAQ.github.io/media/js/jquery.magnific-popup.min.js"></script>
+<script src="https://SylvanasQAQ.github.io/media/js/functions.js"></script>
+
+    <meta name="referrer" content="never">
+    <meta name="description" content="Vitis HLS (原 Vivado HLS ) 是一个高级综合工具，用户可以通过该工具直接将 C/C++ 编写的函数翻译成 HDL 硬件描述语言，最终再映射成 FPGA 内部的LUT、DSP 资源以及 RAM 资源等。用户通过 Viti..." />
+    <meta name="keywords" content="FPGA" />
+    <script src="https://SylvanasQAQ.github.io/media/js/waterfall.min.js"></script>
+    <script src="https://SylvanasQAQ.github.io/media/js/prism.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <!-- <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script> -->
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/highlight.js/11.5.1/styles/agate.min.css">
+    <script src="https://cdn.bootcdn.net/ajax/libs/highlight.js/11.5.1/highlight.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/highlight.js/11.5.1/languages/verilog.min.js"></script>  
+    <script>hljs.highlightAll();</script>
+    
+    
+    
+    <style type="text/css">
+        #footer a#md-toc {
+            position: fixed;
+            right: 20px;
+            bottom: 80px;
+            text-align: center;
+            z-index: 99;
+            border: 0;
+            width: 40px;
+            height: 40px;
+            text-align: center;
+            line-height: 40px;
+            padding: 0;
+        }
+
+        #footer a#md-toc img {
+            vertical-align: middle;
+        }
+
+        #footer a#md-toc i.fa {
+            margin: 0;
+        }
+
+        #sidebar11 {
+            position: fixed;
+            height: 40%;
+            width: 300px;
+            right: -400px;
+            top: 30%;
+            z-index: 2147483647;
+	    
+        }
+
+        /* When screen is wider than 800px */
+        @media screen and (min-width: 800px) {
+            .main{
+                width: 85%;
+            }
+        }
+    </style>
+    <!--  -->
+  </head>
+  <body>
+            <header id="header" class="grid-container">
+        <!-- start: .menu-wrapper -->
+        <div class="menu-mobile"> 
+          <i class="fa fa-reorder"></i>
+        </div>
+        <div class="menu-wrapper">
+          <div class="">
+            <div class="logo">
+              <a href="https://SylvanasQAQ.github.io"><img src="/media/images/logoo.png" alt=""></a>
+            </div>
+            <!-- start: .main-nav -->
+
+            <nav class="main-nav grid-container grid-parent">
+              <ul id="menu-header" class="menu gradient-effect">
+                <li class=""><a href="https://SylvanasQAQ.github.io" class="menu">首页</a></li>
+                
+                  <li class="" >
+                    <a href="/archives" class="menu">
+                      归档
+                    </a>
+                  </li>
+                
+                  <li class="" >
+                    <a href="/tags" class="menu">
+                      标签
+                    </a>
+                  </li>
+                
+                  <li class="" >
+                    <a href="/post/about" class="menu">
+                      关于
+                    </a>
+                  </li>
+                
+                <li class="search-menu-item hide-on-mobile hide-on-tablet"><a href="#search-lightbox" class="lightbox mfp-inline"><i class="fa fa-search-line"></i></a></li>
+              </ul>
+            </nav>
+            <a href="#search-lightbox" class="lightbox epcl-search-button mfp-inline hide-on-tablet hide-on-desktop"><i class="fa fa-search-line"></i></a>
+            <!-- end: .main-nav -->
+            <div class="clear"></div>
+            <div class="border hide-on-tablet hide-on-mobile"></div>
+          </div>    
+          <div class="clear"></div>
+        </div>
+        <!-- end: .menu-wrapper -->
+        <div class="clear"></div>
+      </header>
+      <div class="hide-on-mobile hide-on-tablet hide-on-desktop">
+        <div id="search-lightbox" class="grid-container grid-small grid-parent mfp-hide">
+          <div class="search-wrapper section">
+            <form id="gridea-search-form" data-update="1653661119992" action="/search/index.html" class="search-form" _lpchecked="1">
+              <input type="text" name="q" id="s" value="" class="search-field" placeholder="搜点啥..." aria-label="搜点啥..." required="">
+              <button type="submit" class="submit" aria-label="Submit">
+                <i class="fa fa-search-line"></i>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <main id="single" class="main grid-container fullcover no-sidebar aos-init aos-animate" data-aos="fade">
+
+        <div class="center content">
+          <div class="featured-image cover" style="background-image: url('https://SylvanasQAQ.github.io/post-images/bt9ZR2x4y.jpg');">
+            <div class="meta top"> 
+              <time class="meta-info" style="float:left;" datetime="05-27-2022"><i class="fa fa-calendar"></i><span class="lately">7 小时前</span></time>
+              
+              <a href="https://SylvanasQAQ.github.io/post/bt9ZR2x4y/#comments" class="comments meta-info" title="">
+                <i class="fa fa-comment remixicon"></i><span class="comment-count valine-comment-count" data-xid="/post/bt9ZR2x4y/"> </span>
+              </a>
+              <span id="/post/bt9ZR2x4y/" class="leancloud_visitors views-counter meta-info" title=""><i class="fa fa-leancloud remixicon"></i><span class="leancloud-visitors-count"></span></span>
+              
+            </div>
+            <div class="info">
+              <div class="tags ">
+                
+                      <a href="https://SylvanasQAQ.github.io/tag/8q-hvEy6h/" class="ctag ctag-0 ctag-8q-hvEy6h" aria-label="">FPGA</a>
+                    
+              </div>
+              <h1 class="title ularge white bold">Vitis HLS 实现手写数字识别</h1>
+            </div>
+          </div>
+        </div>  
+
+        <div id="sidebar11" class="bg-white hosted v" style="padding-left: 10px; padding-right: 10px; overflow-y:scroll;">
+            <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#1-%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B">1 网络模型</a></li>
+<li><a href="#2-%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E5%92%8C%E5%8F%82%E6%95%B0%E6%8F%90%E5%8F%96">2 模型训练和参数提取</a></li>
+<li><a href="#3-hls-%E4%BB%A3%E7%A0%81">3 HLS 代码</a></li>
+<li><a href="#4-%E4%BB%BF%E7%9C%9F%E5%92%8C%E7%BB%BC%E5%90%88%E7%BB%93%E6%9E%9C">4 仿真和综合结果</a></li>
+<li><a href="#5-%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE">5 参考文献</a></li>
+</ul>
+
+            </div>
+        </div>
+
+        <div class="epcl-page-wrapper">
+          <div class="left-content grid-70 np-mobile">
+            <article class="main-article post">
+              <section class="post-content">
+                <div class="text">
+                  <p>Vitis HLS (原 Vivado HLS ) 是一个高级综合工具，用户可以通过该工具直接将 C/C++ 编写的函数翻译成 HDL 硬件描述语言，最终再映射成 FPGA 内部的LUT、DSP 资源以及 RAM 资源等。用户通过 Vitis HLS，使用 C/C++ 代码来开发 RTL IP 核，可以缩短整个 FPGA 项目的开发和验证时间。</p>
+<h1 id="1-网络模型">1 网络模型</h1>
+<p>LeNet 是最早发布的卷积神经网络之一，因其在计算机视觉任务中的高效性能而受到广泛关注。这个模型是由 AT&amp;T 贝尔实验室的研究员 Yann LeCun 在1989年提出的，目的是识别图像中的手写数字。总体来看，LeNet (LeNet-5) 由两个部分组成，如下图所示：</p>
+<ul>
+<li>卷积编码器：由两个卷积块组成，每个卷积块中的基本单元是一个卷积层、一个 sigmoid 激活函数和平均汇聚层</li>
+<li>全连接层密集块：由三个全连接层组成</li>
+</ul>
+<figure data-type="image" tabindex="1"><img src="https://s2.loli.net/2022/05/27/84a9bgCh2WYc6RK.png" alt="LeNet 架构" width="730" height="182" loading="lazy"></figure>
+<p>本文使用王小雪<a href="#ref_1">[1]</a>论文中的网络模型，该模型共有五层，分别为卷积层 C1、降采样层 S1、卷积层 C2、降采样层 S2 和全连接层 D1。在卷积层 C1 中完成的是 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>28</mn><mo>×</mo><mn>28</mn></mrow><annotation encoding="application/x-tex">28 \times 28</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">2</span><span class="mord">8</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">2</span><span class="mord">8</span></span></span></span> 的初始输入图像与 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>5</mn><mo>×</mo><mn>5</mn></mrow><annotation encoding="application/x-tex">5 \times 5</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">5</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">5</span></span></span></span> 的卷积核之间的卷积计算。在卷积层 C2 中完成的是 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>12</mn><mo>×</mo><mn>12</mn></mrow><annotation encoding="application/x-tex">12 \times 12</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">1</span><span class="mord">2</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span><span class="mord">2</span></span></span></span> 的特征图与 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>5</mn><mo>×</mo><mn>5</mn></mrow><annotation encoding="application/x-tex">5 \times 5</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">5</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">5</span></span></span></span> 的卷积核之间的卷积计算。</p>
+<figure data-type="image" tabindex="2"><img src="https://s2.loli.net/2022/05/27/ULC153EKmFSokqZ.png" alt="王小雪的网络模型" width="642" height="210" loading="lazy"></figure>
+<h1 id="2-模型训练和参数提取">2 模型训练和参数提取</h1>
+<p>使用 TensorFlow 搭建网络模型，考虑到后续会使用低精度定点数存储模型参数，将后端默认的浮点类型设置为 16 位。</p>
+<pre><code class="language-py">import tensorflow as tf
+
+def LeNet():
+    return tf.keras.models.Sequential([
+        tf.keras.layers.Conv2D(filters=3, kernel_size=5, activation='sigmoid'),
+        tf.keras.layers.AvgPool2D(pool_size=2, strides=2),
+        tf.keras.layers.Conv2D(filters=12, kernel_size=5,
+                               activation='sigmoid'),
+        tf.keras.layers.AvgPool2D(pool_size=2, strides=2),
+        tf.keras.layers.Flatten(),
+        tf.keras.layers.Dense(10)])
+
+tf.keras.backend.set_floatx('float16')
+</code></pre>
+<p>模型训练使用的数据集为 MNIST，训练集和测试集的处理如下：</p>
+<pre><code class="language-py">mnist_train, mnist_test = tf.keras.datasets.mnist.load_data()
+
+batch_size = 256
+process = lambda X, y: (tf.expand_dims(X, axis=3) / 255, tf.cast(y, dtype=&quot;int32&quot;))
+resize_fn = lambda X, y: (tf.image.resize_with_pad(X, None, None) if None else X, y)
+
+train_iter = (
+    tf.data.Dataset.from_tensor_slices(process(*mnist_train))
+    .batch(256)
+    .shuffle(len(mnist_train[0]))
+    .map(resize_fn)
+)
+test_iter = (
+    tf.data.Dataset.from_tensor_slices(process(*mnist_test)).batch(256).map(resize_fn)
+)
+</code></pre>
+<p>模型训练的代码如下，将表现最好的模型保存在 <code>./weights/best_model.h5</code> 中。</p>
+<pre><code class="language-py">from keras.callbacks import EarlyStopping, ReduceLROnPlateau, ModelCheckpoint
+
+# model fitting
+if len(tf.config.experimental.list_physical_devices('GPU')) &gt;= 1:
+    device = tf.device(f'/GPU:{0}')
+else:
+    device = tf.device('/CPU:0')
+device_name = device._device_name
+strategy = tf.distribute.OneDeviceStrategy(device_name)
+
+lr = 0.9
+num_epochs = 40
+with strategy.scope():
+    optimizer = tf.keras.optimizers.SGD(learning_rate=lr)
+    loss = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
+    net = LeNet()
+    net.compile(optimizer=optimizer, loss=loss, metrics=[&quot;accuracy&quot;])
+earlystop_callback = EarlyStopping(monitor=&quot;accuracy&quot;, min_delta=0.0001, patience=5)
+reduce_lr_callback = ReduceLROnPlateau(monitor=&quot;accuracy&quot;, factor=0.5, patience=3)
+checkpoint_callback = ModelCheckpoint(
+    &quot;./weights/best_model.h5&quot;, monitor=&quot;accuracy&quot;, save_best_only=True
+)
+net.fit(
+    train_iter,
+    epochs=num_epochs,
+    verbose=1,
+    callbacks=[earlystop_callback, reduce_lr_callback, checkpoint_callback],
+)
+</code></pre>
+<p>以上代码参考了《动手学深度学习》第二版<a href="#ref_2">[2]</a> 6.6 节卷积神经网络 (LeNet) 中的内容。模型训练的进展详情如下图所示。</p>
+<figure data-type="image" tabindex="3"><img src="https://s2.loli.net/2022/05/27/QtjyibolDvNeRhJ.png" alt="模型训练进展图" width="412" height="302" loading="lazy"></figure>
+<p>模型训练完成后，通过 <code>net.layers[i].get_weights()</code> 能够访问各层的参数。先查看各层参数的 shape，可以发现其中只有两层卷积层 <code>Conv2D</code> 和一层全连接层 <code>Dense</code> 需要保存参数。</p>
+<pre><code class="language-py">X = tf.random.uniform((1, 28, 28, 1))
+for layer in net.layers:
+    X = layer(X)
+    print(layer.__class__.__name__, X.shape)
+    for item in layer.weights:
+        print('  ', item.name, '  \tshape: ', item.shape)
+
+'''
+Conv2D (1, 24, 24, 3)
+   conv2d/kernel:0   	shape:  (5, 5, 1, 3)
+   conv2d/bias:0   	shape:  (3,)
+AveragePooling2D (1, 12, 12, 3)
+Conv2D (1, 8, 8, 12)
+   conv2d_1/kernel:0   	shape:  (5, 5, 3, 12)
+   conv2d_1/bias:0   	    shape:  (12,)
+AveragePooling2D (1, 4, 4, 12)
+Flatten (1, 192)
+Dense (1, 10)
+   dense/kernel:0   	shape:  (192, 10)
+   dense/bias:0   	    shape:  (10,)
+'''
+</code></pre>
+<p>将参数保存在 txt 文件中，虽然保存为二进制文件更加节省资源，但文本文件方便观察和调试。参数保存的精度为四位小数。</p>
+<pre><code class="language-py"># path to your Vitis HLS testbehch folder
+path = 'xxx'
+# generate weight and bias files
+file = open(path+'LeNet_weights.txt', 'w')
+bias_arr = net.layers[0].get_weights()[1]
+arr = net.layers[0].get_weights()[0].reshape(-1)
+for i in range(25*3):
+    file.write('%.4f ' % arr[i])
+file.write('\n')
+for i in range(3):
+    file.write('%.4f ' % bias_arr[i])
+file.write('\n')
+
+bias_arr = net.layers[2].get_weights()[1]
+arr = net.layers[2].get_weights()[0].reshape(-1)
+for i in range(25*12*3):
+    file.write('%.4f ' % arr[i])
+file.write('\n')
+for i in range(12):
+    file.write('%.4f ' % bias_arr[i])
+file.write('\n')
+
+arr = net.layers[5].get_weights()[0].reshape(-1)
+for i in range(1920):
+    file.write('%.4f ' % arr[i])
+file.write('\n')
+arr = net.layers[5].get_weights()[1].reshape(-1)
+for i in range(10):
+    file.write('%.4f ' % arr[i])
+file.close()
+</code></pre>
+<h1 id="3-hls-代码">3 HLS 代码</h1>
+<p>该节部分代码的优化参考了一篇 CSDN 博客<a href="#ref_3">[3]</a>，详见 <a href="https://github.com/SylvanasQAQ/VitisHLS_LeNet">VitisHLS_LeNet</a>。</p>
+<h1 id="4-仿真和综合结果">4 仿真和综合结果</h1>
+<p>为每一层的函数编写对应的 testbench 测试文件，比较相同输入数据下 HLS C 仿真的结果与 Python 运算的结果是否在误差允许的范围内。误差门限 <code>ERROR_GAP</code> 为 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>0.01</mn></mrow><annotation encoding="application/x-tex">0.01</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">0</span><span class="mord">.</span><span class="mord">0</span><span class="mord">1</span></span></span></span>，每超过一次门限便统计一次，当单个测试用例有 10 次超过门限就判定为失败。</p>
+<pre><code class="language-cpp">if (hls::absf(expected_output_arr[i][k][r][c] - output_arr[k][r][c]) &gt; ERROR_GAP)
+    mismatch_count++
+</code></pre>
+<p>使用 MNIST 测试集前 100 例数据用于各层的功能测试，用前 1000 例数据测试整个系统的识别正确率。C Simulation 的结果如下，可以看到各个模块的测试均无异常，系统的识别正确率为 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>98.0</mn></mrow><annotation encoding="application/x-tex">98.0%</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">9</span><span class="mord">8</span><span class="mord">.</span><span class="mord">0</span></span></span></span>。</p>
+<figure data-type="image" tabindex="4"><img src="https://s2.loli.net/2022/05/27/A3BsNJl6MxZKiLP.jpg" alt="C Simulation 输出图" loading="lazy"></figure>
+<p>C Synthesis 的部分结果如下，整个模块的延迟为 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>308</mn><mi>μ</mi><mtext>s</mtext></mrow><annotation encoding="application/x-tex">308 \mu \text{s}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8388800000000001em;vertical-align:-0.19444em;"></span><span class="mord">3</span><span class="mord">0</span><span class="mord">8</span><span class="mord mathdefault">μ</span><span class="mord text"><span class="mord">s</span></span></span></span></span>，无 Timing Violation 和 II Violation。</p>
+<figure data-type="image" tabindex="5"><img src="https://s1.328888.xyz/2022/05/27/thKPT.png" alt="C Synthesis Results" loading="lazy"></figure>
+<h1 id="5-参考文献">5 参考文献</h1>
+<p><a id="ref_1"><a href="https://kns.cnki.net/kcms/detail/detail.aspx?dbcode=CMFD&amp;dbname=CMFD201801&amp;filename=1018812356.nh">[1]王小雪. 基于FPGA的卷积神经网络手写数字识别系统的实现[D].北京理工大学,2016. </a> </a></p>
+<p><a id="ref_2"><a href="https://zh.d2l.ai/index.html">[2]Zhang A, Lipton Z C, Li M, et al. Dive into deep learning[J]. arXiv preprint arXiv:2106.11342, 2021.</a> </a></p>
+<p><a id="ref_3"><a href="https://blog.csdn.net/qq_36334929/article/details/108627123">[3]HLS学习笔记——实现卷积层的加速计算</a> </a></p>
+
+                </div>
+                <div class="clear"></div>
+              </section>
+            </article>
+            <div class="clear"></div>
+
+        
+
+            <section class="related section">
+              
+              
+              <article class="next grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://SylvanasQAQ.github.io/post-images/PGELKesQU.jpg');"></div>
+                 <a href="https://SylvanasQAQ.github.io/post/PGELKesQU/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="05-19-2022">05-19-2022</time>
+                  <h4 class="title white no-margin">Verilog 语法</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://SylvanasQAQ.github.io/media/images/right-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+
+                <div class="clear"></div>
+            </section>
+
+              <div class="clear"></div>
+              
+            
+              <div id="comments" class="bg-white hosted ">
+                <div class="clear"></div>
+<script>
+jQuery(document).ready(function($){
+    $('.vemoji-btn').text('😀');
+    $("#comments").on('click', 'span.vat',function(){
+        $(this).parent('div.vmeta').next("div.vcontent").after($("div.vwrap"));
+        $('textarea#veditor').focus();
+    })
+    if(window.location.hash){
+        var checkExist = setInterval(function() {
+            if ($(window.location.hash).length) {
+                $('html, body').animate({scrollTop: $(window.location.hash).offset().top-200}, 600);
+                clearInterval(checkExist);
+            }
+        }, 100);
+    }
+})
+</script>
+
+              </div>
+            
+
+            </div>
+          </div>
+      </main>
+
+          <footer id="footer" class="grid-container">
+        <div class="widgets row gradient-effect">
+            <div class="default-sidebar border-effect">
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_epcl_posts_thumbs underline-effect">
+                  <h4 class="widget-title title white bordered">最新文章</h4>
+                  
+                  
+                  <article class="item post-0 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://SylvanasQAQ.github.io/post/bt9ZR2x4y/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://SylvanasQAQ.github.io/post-images/bt9ZR2x4y.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="05-27-2022">05-27-2022</time>
+                      <h4 class="title usmall">
+                        <a href="https://SylvanasQAQ.github.io/post/bt9ZR2x4y/">Vitis HLS 实现手写数字识别</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-1 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://SylvanasQAQ.github.io/post/PGELKesQU/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://SylvanasQAQ.github.io/post-images/PGELKesQU.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="05-19-2022">05-19-2022</time>
+                      <h4 class="title usmall">
+                        <a href="https://SylvanasQAQ.github.io/post/PGELKesQU/">Verilog 语法</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-2 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://SylvanasQAQ.github.io/post/0_rHJUypa/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://SylvanasQAQ.github.io/post-images/0_rHJUypa.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="04-29-2022">04-29-2022</time>
+                      <h4 class="title usmall">
+                        <a href="https://SylvanasQAQ.github.io/post/0_rHJUypa/">第 6 章家庭作业</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_tag_cloud underline-effect">
+                  <h4 class="widget-title title white bordered">标签云</h4>
+                  <div class="tagcloud">
+                    
+                      <a href="https://SylvanasQAQ.github.io/tag/8q-hvEy6h/" class="ctag ctag-0 ctag-8q-hvEy6h" aria-label="">FPGA</a>
+                    
+                      <a href="https://SylvanasQAQ.github.io/tag/6PZSNKfJ9/" class="ctag ctag-1 ctag-6PZSNKfJ9" aria-label="">CSAPP</a>
+                    
+                  </div>
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="epcl_about-2" class="widget widget_epcl_about underline-effect">
+                  <h4 class="widget-title title white bordered">关于我</h4>
+                  <div class="avatar">
+                    <a href="" class="translate-effect thumb"><span class="fullimage cover" style="background-image: url(https://SylvanasQAQ.github.io/images/avatar.png);"></span></a>
+                  </div>
+                  <div class="info">
+                    <h4 class="title small author-name gradient-effect no-margin"><a href="https://SylvanasQAQ.github.io/post/about ">Ayanami&#39;s blog</a></h4>
+                    <p class="founder">Life feeds on negative entropy</p>
+                    <div class="social">
+                      
+                          
+                            <a href="https://github.com/SylvanasQAQ" class="translate-effect" target="_blank"><i class="fa fa-github"></i></a>
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                    </div> 
+                  </div>
+                  <div class="clear"></div>
+                  </section>
+              </div>
+
+            </div>
+            <div class="clear"></div>
+        </div>
+
+        <div class="logo">
+          <a href="https://SylvanasQAQ.github.io"><img src="/media/images/gridea.png" alt=""></a>
+        </div>
+        <p class="published border-effect">
+          ©2022 共 6 篇文章
+          <br/>
+          Theme <a href="https://gridea.dev/" target="_blank">「breek」</a> Powered by <a href="https://gridea.dev/" target="_blank">「Gridea」</a>
+        </p>
+        
+        <a href="javascript:void(0)" id="back-to-top" class="epcl-button dark" style="display:none">
+          <i class="fa fa-arrow"></i>
+        </a>
+
+        <a href="javascript:void(0)" id="md-toc" class="epcl-button dark" style="display:none">
+          <i class="fa"><svg t="1650112028452" class="icon" viewBox="0 -150 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2752" width="30" height="30"><path d="M124 256.992q0-26.016 18.496-44.512t44.512-18.496 44.512 18.496 18.496 44.512-18.496 44.512T187.008 320t-44.512-18.496-18.496-44.512z m732 29.024H357.984q-15.008 0-25.504-10.496t-10.496-25.504q0-15.008 10.496-25.504t25.504-10.496H856q15.008 0 25.504 10.496t10.496 25.504q0 15.008-10.496 25.504t-25.504 10.496zM124 512q0-26.016 18.496-44.512t44.512-18.496 44.512 18.496T250.016 512t-18.496 44.512-44.512 18.496-44.512-18.496T124 512z m732 28.992H357.984q-15.008 0-25.504-10.496t-10.496-25.504q0-15.008 10.496-25.504t25.504-10.496H856q15.008 0 25.504 10.496t10.496 25.504q0 15.008-10.496 25.504t-25.504 10.496zM124 767.008q0-26.016 18.496-44.512T187.008 704t44.512 18.496 18.496 44.512-18.496 44.512-44.512 18.496-44.512-18.496-18.496-44.512z m732 28.992H357.984q-15.008 0-25.504-10.496t-10.496-25.504q0-15.008 10.496-25.504t25.504-10.496H856q15.008 0 25.504 10.496t10.496 25.504q0 15.008-10.496 25.504t-25.504 10.496z" p-id="2753" fill="#e8e8e8"></path></svg></i>
+        </a>
+    </footer>
+    
+    <div class="clear"></div>
+
+        
+<!-- <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/leancloud-storage/dist/av-min.js"></script> -->
+<script src="https://SylvanasQAQ.github.io/media/js/av-min.js"></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/valine/1.3.10/Valine.Pure.min.js"></script>
+<script>
+    new Valine({
+        el: '#comments',
+        appId: 'eRwxRootBaBzDBwoutG7bLYE-gzGzoHsz' ,
+        appKey: '7NuCOYYcsdap67sNFgVsIHUm',
+        pageSize: 30,
+        placeholder: '既然来了，那就留个痕迹吧~',
+        visitor: true // 阅读量统计
+    })
+</script>
+    
+
+      
+    <script src="https://SylvanasQAQ.github.io/media/js/functions-post.js"></script>
+     <script>
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+	  let halfHeight = document.body.clientHeight*0.8;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop+halfHeight) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop+halfHeight) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    
+
+
+      (function ($) {
+            "use strict";
+                var bt;
+                var isHiden = true;
+
+                window.onmouseup = function(obj){
+                    if(obj.toElement.className == "epcl-button dark" || obj.toElement.className instanceof SVGAnimatedString || obj.toElement.className == "bg-white hosted v" || obj.toElement.className == "toc-container")
+                        return;
+                    if (isHiden == false) {
+                        $('#sidebar11').animate({ right: '-400px' }); //目录块向左移动
+                        isHiden = !isHiden;
+                    }
+                };
+
+                bt = $('#md-toc');
+                $(window).scroll(function () {
+                    var st;
+                    st = $(window).scrollTop();
+                    return bt.css('display', 'block');
+                });
+                return bt.on('click', function (event) {
+                    if (isHiden) {
+                        $('#sidebar11').animate({ right: '0' }).show();//目录块向右移动
+                    } else {
+                        $('#sidebar11').animate({ right: '-400px' }); //目录块向左移动
+                    }
+                    isHiden = !isHiden;
+                    return false;
+                });
+        })(jQuery);
+    </script>
+
+    </div>
+    <!-- end: #wrapper -->
+  </body>
+</html>

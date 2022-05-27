@@ -1,0 +1,1084 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>第 5 章家庭作业 | Ayanami&#39;s blog</title>
+<meta name="description" content="Life feeds on negative entropy" />
+<link rel="shortcut icon" href="https://SylvanasQAQ.github.io/favicon.ico">
+<link rel="stylesheet" href="https://SylvanasQAQ.github.io/styles/main.css">
+
+<script src="https://SylvanasQAQ.github.io/media/js/jquery.min.js"></script>
+<script src="https://SylvanasQAQ.github.io/media/js/masonry.pkgd.min.js"></script>
+<script src="https://SylvanasQAQ.github.io/media/js/aos.js"></script>
+<script src="https://SylvanasQAQ.github.io/media/js/pace.min.js"></script>
+<script src="https://SylvanasQAQ.github.io/media/js/view-image.min.js"></script>
+<script src="https://SylvanasQAQ.github.io/media/js/jquery.magnific-popup.min.js"></script>
+<script src="https://SylvanasQAQ.github.io/media/js/functions.js"></script>
+
+    <meta name="referrer" content="never">
+    <meta name="description" content="5.13
+A.
+
+B. 对于数据类型 double，决定 CPE 下界的是浮点加法单元，CPE 为 3.03.03.0
+C. 对于整数数据，决定 CPE 下界的是整数加法单元，CPE 为 1.01.01.0
+D. 因为乘法操作之间不具有数据..." />
+    <meta name="keywords" content="CSAPP" />
+    <script src="https://SylvanasQAQ.github.io/media/js/waterfall.min.js"></script>
+    <script src="https://SylvanasQAQ.github.io/media/js/prism.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <!-- <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script> -->
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/highlight.js/11.5.1/styles/agate.min.css">
+    <script src="https://cdn.bootcdn.net/ajax/libs/highlight.js/11.5.1/highlight.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/highlight.js/11.5.1/languages/verilog.min.js"></script>  
+    <script>hljs.highlightAll();</script>
+    
+    
+    
+    <style type="text/css">
+        #footer a#md-toc {
+            position: fixed;
+            right: 20px;
+            bottom: 80px;
+            text-align: center;
+            z-index: 99;
+            border: 0;
+            width: 40px;
+            height: 40px;
+            text-align: center;
+            line-height: 40px;
+            padding: 0;
+        }
+
+        #footer a#md-toc img {
+            vertical-align: middle;
+        }
+
+        #footer a#md-toc i.fa {
+            margin: 0;
+        }
+
+        #sidebar11 {
+            position: fixed;
+            height: 40%;
+            width: 300px;
+            right: -400px;
+            top: 30%;
+            z-index: 2147483647;
+	    
+        }
+
+        /* When screen is wider than 800px */
+        @media screen and (min-width: 800px) {
+            .main{
+                width: 85%;
+            }
+        }
+    </style>
+    <!--  -->
+  </head>
+  <body>
+            <header id="header" class="grid-container">
+        <!-- start: .menu-wrapper -->
+        <div class="menu-mobile"> 
+          <i class="fa fa-reorder"></i>
+        </div>
+        <div class="menu-wrapper">
+          <div class="">
+            <div class="logo">
+              <a href="https://SylvanasQAQ.github.io"><img src="/media/images/logoo.png" alt=""></a>
+            </div>
+            <!-- start: .main-nav -->
+
+            <nav class="main-nav grid-container grid-parent">
+              <ul id="menu-header" class="menu gradient-effect">
+                <li class=""><a href="https://SylvanasQAQ.github.io" class="menu">首页</a></li>
+                
+                  <li class="" >
+                    <a href="/archives" class="menu">
+                      归档
+                    </a>
+                  </li>
+                
+                  <li class="" >
+                    <a href="/tags" class="menu">
+                      标签
+                    </a>
+                  </li>
+                
+                  <li class="" >
+                    <a href="/post/about" class="menu">
+                      关于
+                    </a>
+                  </li>
+                
+                <li class="search-menu-item hide-on-mobile hide-on-tablet"><a href="#search-lightbox" class="lightbox mfp-inline"><i class="fa fa-search-line"></i></a></li>
+              </ul>
+            </nav>
+            <a href="#search-lightbox" class="lightbox epcl-search-button mfp-inline hide-on-tablet hide-on-desktop"><i class="fa fa-search-line"></i></a>
+            <!-- end: .main-nav -->
+            <div class="clear"></div>
+            <div class="border hide-on-tablet hide-on-mobile"></div>
+          </div>    
+          <div class="clear"></div>
+        </div>
+        <!-- end: .menu-wrapper -->
+        <div class="clear"></div>
+      </header>
+      <div class="hide-on-mobile hide-on-tablet hide-on-desktop">
+        <div id="search-lightbox" class="grid-container grid-small grid-parent mfp-hide">
+          <div class="search-wrapper section">
+            <form id="gridea-search-form" data-update="1653661119992" action="/search/index.html" class="search-form" _lpchecked="1">
+              <input type="text" name="q" id="s" value="" class="search-field" placeholder="搜点啥..." aria-label="搜点啥..." required="">
+              <button type="submit" class="submit" aria-label="Submit">
+                <i class="fa fa-search-line"></i>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <main id="single" class="main grid-container fullcover no-sidebar aos-init aos-animate" data-aos="fade">
+
+        <div class="center content">
+          <div class="featured-image cover" style="background-image: url('https://SylvanasQAQ.github.io/post-images/gUdBg3EiE.jpg');">
+            <div class="meta top"> 
+              <time class="meta-info" style="float:left;" datetime="04-24-2022"><i class="fa fa-calendar"></i><span class="lately">1 个月前</span></time>
+              
+              <a href="https://SylvanasQAQ.github.io/post/gUdBg3EiE/#comments" class="comments meta-info" title="">
+                <i class="fa fa-comment remixicon"></i><span class="comment-count valine-comment-count" data-xid="/post/gUdBg3EiE/"> </span>
+              </a>
+              <span id="/post/gUdBg3EiE/" class="leancloud_visitors views-counter meta-info" title=""><i class="fa fa-leancloud remixicon"></i><span class="leancloud-visitors-count"></span></span>
+              
+            </div>
+            <div class="info">
+              <div class="tags ">
+                
+                      <a href="https://SylvanasQAQ.github.io/tag/6PZSNKfJ9/" class="ctag ctag-0 ctag-6PZSNKfJ9" aria-label="">CSAPP</a>
+                    
+              </div>
+              <h1 class="title ularge white bold">第 5 章家庭作业</h1>
+            </div>
+          </div>
+        </div>  
+
+        <div id="sidebar11" class="bg-white hosted v" style="padding-left: 10px; padding-right: 10px; overflow-y:scroll;">
+            <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#513">5.13</a></li>
+<li><a href="#514">5.14</a></li>
+<li><a href="#515">5.15</a></li>
+<li><a href="#516">5.16</a></li>
+<li><a href="#517">5.17</a></li>
+<li><a href="#518">5.18</a></li>
+<li><a href="#519">5.19</a></li>
+</ul>
+</li>
+</ul>
+
+            </div>
+        </div>
+
+        <div class="epcl-page-wrapper">
+          <div class="left-content grid-70 np-mobile">
+            <article class="main-article post">
+              <section class="post-content">
+                <div class="text">
+                  <h2 id="513">5.13</h2>
+<p>A.</p>
+<figure data-type="image" tabindex="1"><img src="https://s2.loli.net/2022/04/25/V3T2cKWIMX8ErG6.png" alt="数据流图" width="346" height="390" loading="lazy"></figure>
+<p>B. 对于数据类型 <code>double</code>，决定 CPE 下界的是浮点加法单元，CPE 为 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>3.0</mn></mrow><annotation encoding="application/x-tex">3.0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">3</span><span class="mord">.</span><span class="mord">0</span></span></span></span></p>
+<p>C. 对于整数数据，决定 CPE 下界的是整数加法单元，CPE 为 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>1.0</mn></mrow><annotation encoding="application/x-tex">1.0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span><span class="mord">.</span><span class="mord">0</span></span></span></span></p>
+<p>D. 因为乘法操作之间不具有数据相关，可完全流水线化，所以关键路径上只有浮点加法，因此 CPE 为 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>3.00</mn></mrow><annotation encoding="application/x-tex">3.00</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">3</span><span class="mord">.</span><span class="mord">0</span><span class="mord">0</span></span></span></span></p>
+<h2 id="514">5.14</h2>
+<p>A. <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>6</mn><mo>×</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">6 \times 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">6</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span></span></span></span> 循环展开版本的关键路径上的每个部分有 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>6</mn></mrow><annotation encoding="application/x-tex">6</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">6</span></span></span></span> 个加法操作，共有 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi><mi mathvariant="normal">/</mi><mn>6</mn></mrow><annotation encoding="application/x-tex">n/6</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">n</span><span class="mord">/</span><span class="mord">6</span></span></span></span> 个部分，因此关键路径上的操作数为 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>6</mn><mo>∗</mo><mi>n</mi><mi mathvariant="normal">/</mi><mn>6</mn><mo>=</mo><mi>n</mi></mrow><annotation encoding="application/x-tex">6 * n / 6 = n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">6</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">∗</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">n</span><span class="mord">/</span><span class="mord">6</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">n</span></span></span></span>，所以 CPE 约等于加法操作的延迟。而加法操作的最小延迟为 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>1</mn></mrow><annotation encoding="application/x-tex">1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span></span></span></span>，因此任何版本的内积过程都不能达到比 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>1.00</mn></mrow><annotation encoding="application/x-tex">1.00</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span><span class="mord">.</span><span class="mord">0</span><span class="mord">0</span></span></span></span> 更小的 CPE。</p>
+<p>B. 同上</p>
+<h2 id="515">5.15</h2>
+<pre><code class="language-c">#include &lt;assert.h&gt;
+#include &lt;memory.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;time.h&gt;
+
+/* Definition of vector structure */
+typedef double data_t;
+typedef struct
+{
+    long len;
+    data_t *data;
+} vec_rec, *vec_ptr;
+
+vec_ptr new_vec(long len)
+{
+    // Allocate header structure
+    vec_ptr pHeader = (vec_ptr)malloc(sizeof(vec_rec));
+    data_t *pData = NULL;
+    if (!pHeader)
+        return NULL; // Couldn't allocate storage
+    pHeader-&gt;len = len;
+    // Allocate array
+    if (len &gt; 0)
+    {
+        pData = (data_t *)calloc(len, sizeof(data_t));
+        if (!pData)
+        {
+            free((void *)pHeader);
+            return NULL; // Couldn't allocate storage
+        }
+    }
+    // Data will either be NULL or allocated array
+    pHeader-&gt;data = pData;
+    return pHeader;
+}
+
+int get_vec_element(vec_ptr v, long index, data_t *dest)
+{
+    if (index &lt; 0 || index &gt;= v-&gt;len)
+        return 0; // Out of bounds
+    *dest = v-&gt;data[index];
+    return 1; // Success
+}
+
+long vec_length(vec_ptr v)
+{
+    return v-&gt;len;
+}
+
+data_t *get_vec_start(vec_ptr v)
+{
+    return v-&gt;data;
+}
+
+/* Inner product. Accumulate in temporary */
+void inner4(vec_ptr u, vec_ptr v, data_t *dest)
+{
+    long i;
+    long length = vec_length(u);
+    data_t *udata = get_vec_start(u);
+    data_t *vdata = get_vec_start(v);
+    data_t sum = (data_t)0;
+
+    for (i = 0; i &lt; length; i++)
+        sum = sum + udata[i] * vdata[i];
+    *dest = sum;
+}
+
+/* Inner product. 6x1 loop unrolling */
+void inner_6_1(vec_ptr u, vec_ptr v, data_t *dest)
+{
+    long i;
+    long length = vec_length(u);
+    data_t *udata = get_vec_start(u);
+    data_t *vdata = get_vec_start(v);
+    data_t sum = (data_t)0;
+
+    for (i = 0; i &lt;= length - 6; i += 6)
+    {
+        sum += udata[i] * vdata[i];
+        sum += udata[i + 1] * vdata[i + 1];
+        sum += udata[i + 2] * vdata[i + 2];
+        sum += udata[i + 3] * vdata[i + 3];
+        sum += udata[i + 4] * vdata[i + 4];
+        sum += udata[i + 5] * vdata[i + 5];
+    }
+
+    for (; i &lt; length; i++)
+        sum = sum + udata[i] * vdata[i];
+    *dest = sum;
+}
+
+/* Inner product. 6x6 loop unrolling */
+void inner_6_6(vec_ptr u, vec_ptr v, data_t *dest)
+{
+    long i;
+    long length = vec_length(u);
+    data_t *udata = get_vec_start(u);
+    data_t *vdata = get_vec_start(v);
+    data_t sum0 = (data_t)0;
+    data_t sum1 = (data_t)0;
+    data_t sum2 = (data_t)0;
+    data_t sum3 = (data_t)0;
+    data_t sum4 = (data_t)0;
+    data_t sum5 = (data_t)0;
+
+    for (i = 0; i &lt;= length - 6; i += 6)
+    {
+        sum0 = sum0 + (udata[i] * vdata[i]);
+        sum1 = sum1 + (udata[i + 1] * vdata[i + 1]);
+        sum2 = sum2 + (udata[i + 2] * vdata[i + 2]);
+        sum3 = sum3 + (udata[i + 3] * vdata[i + 3]);
+        sum4 = sum4 + (udata[i + 4] * vdata[i + 4]);
+        sum5 = sum5 + (udata[i + 5] * vdata[i + 5]);
+    }
+
+    for (; i &lt; length; i++)
+        sum0 = sum0 + udata[i] * vdata[i];
+
+    *dest = sum0 + sum1 + sum2 + sum3 + sum4 + sum5;
+}
+
+/* Inner product. 6x1a loop unrolling */
+void inner_6_1a(vec_ptr u, vec_ptr v, data_t *dest)
+{
+    long i;
+    long length = vec_length(u);
+    data_t *udata = get_vec_start(u);
+    data_t *vdata = get_vec_start(v);
+    data_t sum = (data_t)0;
+
+    for (i = 0; i &lt;= length - 6; i += 6)
+        sum = sum + (udata[i] * vdata[i] + udata[i + 1] * vdata[i + 1] + udata[i + 2] * vdata[i + 2] + udata[i + 3] * vdata[i + 3] + udata[i + 4] * vdata[i + 4] + udata[i + 5] * vdata[i + 5]);
+
+    for (; i &lt; length; i++)
+        sum = sum + udata[i] * vdata[i];
+
+    *dest = sum;
+}
+
+/* CPE test */
+#define N 1000000
+#define LOOP 100
+int main()
+{
+    for (int num = 0; num &lt; 8; num++)
+    {
+        printf(&quot;---------#%d---------\n&quot;, num + 1);
+        vec_ptr u = new_vec(N + num);
+        vec_ptr v = new_vec(N + num);
+        data_t *udata = get_vec_start(u);
+        data_t *vdata = get_vec_start(v);
+        for (int i = 0; i &lt; N + num; i++)
+        {
+            udata[i] = (data_t)(rand() % 100);
+            vdata[i] = (data_t)(rand() % 100);
+        }
+
+        clock_t start, end;
+        data_t dest1, dest2, dest3, dest4;
+
+        start = clock();
+        for (int i = 0; i &lt; LOOP; i++)
+            inner4(u, v, &amp;dest1);
+        end = clock();
+        printf(&quot;inner4:    %8ld | &quot;, end - start);
+
+        start = clock();
+        for (int i = 0; i &lt; LOOP; i++)
+            inner_6_1(u, v, &amp;dest2);
+        end = clock();
+        printf(&quot;inner_6_1:  %8ld\n&quot;, end - start);
+
+        start = clock();
+        for (int i = 0; i &lt; LOOP; i++)
+            inner_6_6(u, v, &amp;dest3);
+        end = clock();
+        printf(&quot;inner_6_6: %8ld | &quot;, end - start);
+
+        start = clock();
+        for (int i = 0; i &lt; LOOP; i++)
+            inner_6_1a(u, v, &amp;dest4);
+        end = clock();
+        printf(&quot;inner_6_1a: %8ld\n&quot;, end - start);
+
+        free(u);
+        free(v);
+        assert(dest1 == dest2);
+        assert(dest1 == dest3);
+        assert(dest1 == dest4);
+    }
+}
+</code></pre>
+<p>在 <code>Intel(R) Core(TM) i7-1068NG7 CPU @ 2.30GHz</code> 上进行测试，输出如下：</p>
+<pre><code class="language-c">---------#1---------
+inner4:      266654 | inner_6_1:    269248
+inner_6_6:   130334 | inner_6_1a:   115673
+---------#2---------
+inner4:      272794 | inner_6_1:    267059
+inner_6_6:   133137 | inner_6_1a:   114011
+---------#3---------
+inner4:      266166 | inner_6_1:    247058
+inner_6_6:   133366 | inner_6_1a:   113238
+---------#4---------
+inner4:      249148 | inner_6_1:    244997
+inner_6_6:   132781 | inner_6_1a:   115536
+---------#5---------
+inner4:      262702 | inner_6_1:    264659
+inner_6_6:   135644 | inner_6_1a:   117583
+---------#6---------
+inner4:      255991 | inner_6_1:    269604
+inner_6_6:   132956 | inner_6_1a:   110715
+---------#7---------
+inner4:      254987 | inner_6_1:    258611
+inner_6_6:   130950 | inner_6_1a:   112928
+---------#8---------
+inner4:      257418 | inner_6_1:    247065
+inner_6_6:   130331 | inner_6_1a:   107883
+</code></pre>
+<h2 id="516">5.16</h2>
+<p>见 5.15</p>
+<h2 id="517">5.17</h2>
+<pre><code class="language-c">#include &lt;assert.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+#include &lt;time.h&gt;
+
+void *basic_memset(void *s, int c, size_t n)
+{
+    size_t cnt = 0;
+    unsigned char *schar = (unsigned char *)s;
+    while (cnt &lt; n)
+    {
+        *schar++ = (unsigned char)c;
+        cnt++;
+    }
+    return s;
+}
+
+void *batch_memset(void *s, int c, size_t n)
+{
+    size_t K = sizeof(unsigned long);
+
+    unsigned char *schar = (unsigned char *)s;
+    while ((unsigned long)schar % K != 0 &amp;&amp; n &gt; 0)
+    {
+        *schar++ = (unsigned char)c;
+        n--;
+    }
+
+    unsigned long num = c &amp; 0xff;
+    for (size_t i = 1; i &lt; K; i++)
+        num |= num &lt;&lt; 8;
+
+    unsigned long *slong = (unsigned long *)schar;
+    while (n &gt;= K)
+    {
+        *slong++ = num;
+        n -= K;
+    }
+
+    schar = (unsigned char *)slong;
+    while (n &gt; 0)
+    {
+        *schar++ = (unsigned char)c;
+        n--;
+    }
+
+    return s;
+}
+
+#define N 10000000
+#define LOOP 100
+int main()
+{
+    size_t space = N;
+    time_t start, end;
+
+    void *basic_space = malloc(space);
+    void *batch_space = malloc(space);
+
+    size_t K = sizeof(unsigned long);
+    for (size_t i = 0; i &lt; K; i++)
+    {
+        start = clock();
+        for (int i = 0; i &lt; LOOP; i++)
+            basic_memset(((unsigned char *)basic_space + i), 0xaa - i, space - i);
+        end = clock();
+        printf(&quot;basic malloc time: %ld | &quot;, end - start);
+
+        start = clock();
+        for (int i = 0; i &lt; LOOP; i++)
+            batch_memset(((unsigned char *)batch_space + i), 0xaa - i, space - i);
+        end = clock();
+        printf(&quot;batch malloc time: %ld\n&quot;, end - start);
+        
+        assert(memcmp(basic_space, batch_space, space) == 0);
+    }
+
+    free(basic_space);
+    free(batch_space);
+}
+</code></pre>
+<p>在 <code>Intel(R) Core(TM) i7-1068NG7 CPU @ 2.30GHz</code> 上进行测试，输出如下：</p>
+<pre><code class="language-c">basic malloc time: 887491 | batch malloc time: 146131
+basic malloc time: 856498 | batch malloc time: 142887
+basic malloc time: 870289 | batch malloc time: 149532
+basic malloc time: 849905 | batch malloc time: 141645
+basic malloc time: 872003 | batch malloc time: 141303
+basic malloc time: 890140 | batch malloc time: 136793
+basic malloc time: 869906 | batch malloc time: 139895
+basic malloc time: 881630 | batch malloc time: 131402
+</code></pre>
+<h2 id="518">5.18</h2>
+<pre><code class="language-c">#include &lt;assert.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;time.h&gt;
+
+// Apply 6x3a loop unrolling
+double poly_6_3a(double a[], double x, long degree)
+{
+    double acc0 = 0, acc1 = 0, acc2 = 0;
+
+    double x2 = x * x;
+    double x3 = x2 * x;
+    double x4 = x2 * x2;
+    double x5 = x3 * x2;
+    double xpwr = 1;
+
+    long i, limit = degree - 6;
+    for (i = 0; i &lt;= limit; i += 6)
+    {
+        acc0 = acc0 + (a[i] + a[i + 1] * x) * xpwr;
+        acc1 = acc1 + (a[i + 2] * x2 + a[i + 3] * x3) * xpwr;
+        acc2 = acc2 + (a[i + 4] * x4 + a[i + 5] * x5) * xpwr;
+        xpwr *= x3 * x3;
+    }
+
+    for (; i &lt;= degree; i++)
+    {
+        acc0 = acc0 + a[i] * xpwr;
+        xpwr *= x;
+    }
+
+    return acc0 + acc1 + acc2;
+}
+
+// Apply 9x3a loop unrolling
+double poly_9_3a(double a[], double x, long degree)
+{
+    double acc0 = 0, acc1 = 0, acc2 = 0;
+
+    double x2 = x * x;
+    double x3 = x2 * x;
+    double x4 = x2 * x2;
+    double x5 = x3 * x2;
+    double x6 = x3 * x3;
+    double x7 = x4 * x3;
+    double x8 = x4 * x4;
+    double xpwr = 1;
+
+    long i, limit = degree - 9;
+    for (i = 0; i &lt;= limit; i += 9)
+    {
+        acc0 = acc0 + (a[i] + a[i + 1] * x + a[i + 2] * x2) * xpwr;
+        acc1 = acc1 + (a[i + 3] * x3 + a[i + 4] * x4 + a[i + 5] * x5) * xpwr;
+        acc2 = acc2 + (a[i + 6] * x6 + a[i + 7] * x7+ a[i + 8] * x8) * xpwr;
+
+        xpwr *= x6 * x3;
+    }
+
+    for (; i &lt;= degree; i++)
+    {
+        acc0 = acc0 + a[i] * xpwr;
+        xpwr *= x;
+    }
+
+    return acc0 + acc1 + acc2;
+}
+
+double poly(double a[], double x, long degree)
+{
+    long i;
+    double result = a[0];
+    double xpwr = x;
+    for (i = 1; i &lt;= degree; i++)
+    {
+        result += a[i] * xpwr;
+        xpwr = x * xpwr;
+    }
+    return result;
+}
+
+/* apply horner's method */
+double polyh(double a[], double x, long degree)
+{
+    long i;
+    double result = a[degree];
+    for (i = degree - 1; i &gt;= 0; i--)
+        result = a[i] + x * result;
+    return result;
+}
+
+
+#define N 10000000
+#define LOOP 10
+int main()
+{
+    double x = 1.0;
+
+    for (int num = 0; num &lt;= 8; num++)
+    {
+        long degree = N + num;
+        double *a = (double *)malloc((degree + 1) * sizeof(double));
+        for (int i = 0; i &lt; degree; i++)
+            a[i] = rand() % 100;
+        printf(&quot;---------degree = %ld---------\n&quot;, degree);
+
+        double result1, result2, result3, result4;
+        clock_t start, end;
+
+        start = clock();
+        for(int i = 0; i &lt; LOOP; i++)
+            result1 = poly_6_3a(a, x, degree);
+        end = clock();
+        printf(&quot;poly_6_3a time spent: %8ld | &quot;, end - start);
+
+        start = clock();
+        for(int i = 0; i &lt; LOOP; i++)
+            result2 = poly(a, x, degree);
+        end = clock();
+        printf(&quot;poly  time spent: %8ld\n&quot;, end - start);
+
+        start = clock();
+        for(int i = 0; i &lt; LOOP; i++)
+            result3 = poly_9_3a(a, x, degree);
+        end = clock();
+        printf(&quot;poly_9_3a time spent: %8ld | &quot;, end - start);
+
+        start = clock();
+        for(int i = 0; i &lt; LOOP; i++)
+            result4 = polyh(a, x, degree);
+        end = clock();
+        printf(&quot;polyh time spent: %8ld\n&quot;, end - start);
+
+        free(a);
+        assert(result1 == result2);
+        assert(result1 == result4);
+        assert(result3 == result2);
+        assert(result3 == result4);
+    }
+}
+</code></pre>
+<p>在 <code>Intel(R) Core(TM) i7-1068NG7 CPU @ 2.30GHz</code> 上进行测试，输出如下：</p>
+<pre><code class="language-c">---------degree = 10000000---------
+poly_6_3a time spent:   111917 | poly  time spent:   264485
+poly_9_3a time spent:    98027 | polyh time spent:   373688
+---------degree = 10000001---------
+poly_6_3a time spent:   110967 | poly  time spent:   265364
+poly_9_3a time spent:    98061 | polyh time spent:   355811
+---------degree = 10000002---------
+poly_6_3a time spent:   110771 | poly  time spent:   254228
+poly_9_3a time spent:    97843 | polyh time spent:   350948
+---------degree = 10000003---------
+poly_6_3a time spent:   118869 | poly  time spent:   257068
+poly_9_3a time spent:    96964 | polyh time spent:   346912
+---------degree = 10000004---------
+poly_6_3a time spent:   110924 | poly  time spent:   247157
+poly_9_3a time spent:   100290 | polyh time spent:   356883
+---------degree = 10000005---------
+poly_6_3a time spent:   110079 | poly  time spent:   247215
+poly_9_3a time spent:    99898 | polyh time spent:   348652
+---------degree = 10000006---------
+poly_6_3a time spent:   107007 | poly  time spent:   248584
+poly_9_3a time spent:    98824 | polyh time spent:   348210
+---------degree = 10000007---------
+poly_6_3a time spent:   111019 | poly  time spent:   242090
+poly_9_3a time spent:    99284 | polyh time spent:   344494
+---------degree = 10000008---------
+poly_6_3a time spent:   111483 | poly  time spent:   246883
+poly_9_3a time spent:    99805 | polyh time spent:   338931
+</code></pre>
+<h2 id="519">5.19</h2>
+<pre><code class="language-c">#include &lt;assert.h&gt;
+#include &lt;memory.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;time.h&gt;
+
+void psum_4_1a(double a[], double p[], long n)
+{
+    long i;
+    double last = 0.0;
+    for (i = 0; i &lt;= n - 4; i += 4)
+    {
+        double tmp;
+        p[i] = last + a[i];
+        tmp = last + (a[i] + a[i + 1]);
+        p[i + 1] = tmp;
+
+        p[i + 2] = tmp + a[i + 2];
+        last = tmp + (a[i + 2] + a[i + 3]);
+        p[i + 3] = last;
+    }
+
+    for (; i &lt; n; i++)
+    {
+        last = last + a[i];
+        p[i] = last;
+    }
+}
+
+void psum2a(double a[], double p[], long n)
+{
+    long i;
+    double last = 0.0;
+    for (i = 0; i &lt;= n - 2; i += 2)
+    {
+        p[i] = last + a[i];
+        last = last + (a[i] + a[i + 1]);
+        p[i + 1] = last;
+    }
+
+    for (; i &lt; n; i++)
+    {
+        last = last + a[i];
+        p[i] = last;
+    }
+}
+
+void psum1a(double a[], double p[], long n)
+{
+    long i;
+    double last_val;
+    last_val = p[0] = a[0];
+    for (i = 1; i &lt; n; i++)
+    {
+        last_val = last_val + a[i];
+        p[i] = last_val;
+    }
+}
+
+#define N 10000000
+#define LOOP 10
+int main()
+{
+    for (int num = 0; num &lt;= 8; num++)
+    {
+        double *a = (double *)malloc((N + num) * sizeof(double));
+        double *p1 = (double *)malloc((N + num) * sizeof(double));
+        double *p2 = (double *)malloc((N + num) * sizeof(double));
+        double *p3 = (double *)malloc((N + num) * sizeof(double));
+        for (int i = 0; i &lt; N + num; i++)
+            a[i] = rand() % 100;
+
+        clock_t start, end;
+
+        start = clock();
+        for (int i = 0; i &lt; LOOP; i++)
+            psum_4_1a(a, p1, N + num);
+        end = clock();
+        printf(&quot;psum_4_1a time spent: %8ld | &quot;, end - start);
+
+        start = clock();
+        for (int i = 0; i &lt; LOOP; i++)
+            psum2a(a, p2, N + num);
+        end = clock();
+        printf(&quot;psum2a  time spent: %8ld | &quot;, end - start);
+
+        start = clock();
+        for (int i = 0; i &lt; LOOP; i++)
+            psum1a(a, p3, N + num);
+        end = clock();
+        printf(&quot;psum1a  time spent: %8ld\n&quot;, end - start);
+
+        int res1 = memcmp(p1, p3, (N + num) * sizeof(double));
+        int res2 = memcmp(p2, p3, (N + num) * sizeof(double));
+        free(a);
+        free(p1);
+        free(p2);
+        free(p3);
+        assert(res1 == 0); // memcmp(p1, p3, (N+num) * sizeof(double))
+        assert(res2 == 0); // memcmp(p2, p3, (N+num) * sizeof(double))
+    }
+}
+</code></pre>
+<p>在 <code>Intel(R) Core(TM) i7-1068NG7 CPU @ 2.30GHz</code> 上进行测试，输出如下：</p>
+<pre><code class="language-c">psum_4_1a time spent:   223439 | psum2a  time spent:   246537 | psum1a  time spent:   340067
+psum_4_1a time spent:   172092 | psum2a  time spent:   198440 | psum1a  time spent:   294900
+psum_4_1a time spent:   179659 | psum2a  time spent:   190736 | psum1a  time spent:   281136
+psum_4_1a time spent:   185108 | psum2a  time spent:   184239 | psum1a  time spent:   295593
+psum_4_1a time spent:   171593 | psum2a  time spent:   187729 | psum1a  time spent:   292309
+psum_4_1a time spent:   158491 | psum2a  time spent:   202586 | psum1a  time spent:   278818
+psum_4_1a time spent:   187312 | psum2a  time spent:   204946 | psum1a  time spent:   282632
+psum_4_1a time spent:   192022 | psum2a  time spent:   214267 | psum1a  time spent:   309177
+psum_4_1a time spent:   191109 | psum2a  time spent:   203226 | psum1a  time spent:   281465
+</code></pre>
+
+                </div>
+                <div class="clear"></div>
+              </section>
+            </article>
+            <div class="clear"></div>
+
+        
+
+            <section class="related section">
+              
+              <article class="prev grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://SylvanasQAQ.github.io/post-images/0_rHJUypa.jpg');"></div>
+                 <a href="https://SylvanasQAQ.github.io/post/0_rHJUypa/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="04-29-2022">04-29-2022</time>
+                  <h4 class="title white no-margin">第 6 章家庭作业</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://SylvanasQAQ.github.io/media/images/left-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+              
+              <article class="next grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://SylvanasQAQ.github.io/post-images/-Z1feBTkT.jpg');"></div>
+                 <a href="https://SylvanasQAQ.github.io/post/-Z1feBTkT/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="04-15-2022">04-15-2022</time>
+                  <h4 class="title white no-margin">第 5 章 优化程序性能</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://SylvanasQAQ.github.io/media/images/right-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+
+                <div class="clear"></div>
+            </section>
+
+              <div class="clear"></div>
+              
+            
+              <div id="comments" class="bg-white hosted ">
+                <div class="clear"></div>
+<script>
+jQuery(document).ready(function($){
+    $('.vemoji-btn').text('😀');
+    $("#comments").on('click', 'span.vat',function(){
+        $(this).parent('div.vmeta').next("div.vcontent").after($("div.vwrap"));
+        $('textarea#veditor').focus();
+    })
+    if(window.location.hash){
+        var checkExist = setInterval(function() {
+            if ($(window.location.hash).length) {
+                $('html, body').animate({scrollTop: $(window.location.hash).offset().top-200}, 600);
+                clearInterval(checkExist);
+            }
+        }, 100);
+    }
+})
+</script>
+
+              </div>
+            
+
+            </div>
+          </div>
+      </main>
+
+          <footer id="footer" class="grid-container">
+        <div class="widgets row gradient-effect">
+            <div class="default-sidebar border-effect">
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_epcl_posts_thumbs underline-effect">
+                  <h4 class="widget-title title white bordered">最新文章</h4>
+                  
+                  
+                  <article class="item post-0 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://SylvanasQAQ.github.io/post/bt9ZR2x4y/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://SylvanasQAQ.github.io/post-images/bt9ZR2x4y.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="05-27-2022">05-27-2022</time>
+                      <h4 class="title usmall">
+                        <a href="https://SylvanasQAQ.github.io/post/bt9ZR2x4y/">Vitis HLS 实现手写数字识别</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-1 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://SylvanasQAQ.github.io/post/PGELKesQU/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://SylvanasQAQ.github.io/post-images/PGELKesQU.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="05-19-2022">05-19-2022</time>
+                      <h4 class="title usmall">
+                        <a href="https://SylvanasQAQ.github.io/post/PGELKesQU/">Verilog 语法</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-2 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://SylvanasQAQ.github.io/post/0_rHJUypa/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://SylvanasQAQ.github.io/post-images/0_rHJUypa.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="04-29-2022">04-29-2022</time>
+                      <h4 class="title usmall">
+                        <a href="https://SylvanasQAQ.github.io/post/0_rHJUypa/">第 6 章家庭作业</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_tag_cloud underline-effect">
+                  <h4 class="widget-title title white bordered">标签云</h4>
+                  <div class="tagcloud">
+                    
+                      <a href="https://SylvanasQAQ.github.io/tag/8q-hvEy6h/" class="ctag ctag-0 ctag-8q-hvEy6h" aria-label="">FPGA</a>
+                    
+                      <a href="https://SylvanasQAQ.github.io/tag/6PZSNKfJ9/" class="ctag ctag-1 ctag-6PZSNKfJ9" aria-label="">CSAPP</a>
+                    
+                  </div>
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="epcl_about-2" class="widget widget_epcl_about underline-effect">
+                  <h4 class="widget-title title white bordered">关于我</h4>
+                  <div class="avatar">
+                    <a href="" class="translate-effect thumb"><span class="fullimage cover" style="background-image: url(https://SylvanasQAQ.github.io/images/avatar.png);"></span></a>
+                  </div>
+                  <div class="info">
+                    <h4 class="title small author-name gradient-effect no-margin"><a href="https://SylvanasQAQ.github.io/post/about ">Ayanami&#39;s blog</a></h4>
+                    <p class="founder">Life feeds on negative entropy</p>
+                    <div class="social">
+                      
+                          
+                            <a href="https://github.com/SylvanasQAQ" class="translate-effect" target="_blank"><i class="fa fa-github"></i></a>
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                    </div> 
+                  </div>
+                  <div class="clear"></div>
+                  </section>
+              </div>
+
+            </div>
+            <div class="clear"></div>
+        </div>
+
+        <div class="logo">
+          <a href="https://SylvanasQAQ.github.io"><img src="/media/images/gridea.png" alt=""></a>
+        </div>
+        <p class="published border-effect">
+          ©2022 共 6 篇文章
+          <br/>
+          Theme <a href="https://gridea.dev/" target="_blank">「breek」</a> Powered by <a href="https://gridea.dev/" target="_blank">「Gridea」</a>
+        </p>
+        
+        <a href="javascript:void(0)" id="back-to-top" class="epcl-button dark" style="display:none">
+          <i class="fa fa-arrow"></i>
+        </a>
+
+        <a href="javascript:void(0)" id="md-toc" class="epcl-button dark" style="display:none">
+          <i class="fa"><svg t="1650112028452" class="icon" viewBox="0 -150 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2752" width="30" height="30"><path d="M124 256.992q0-26.016 18.496-44.512t44.512-18.496 44.512 18.496 18.496 44.512-18.496 44.512T187.008 320t-44.512-18.496-18.496-44.512z m732 29.024H357.984q-15.008 0-25.504-10.496t-10.496-25.504q0-15.008 10.496-25.504t25.504-10.496H856q15.008 0 25.504 10.496t10.496 25.504q0 15.008-10.496 25.504t-25.504 10.496zM124 512q0-26.016 18.496-44.512t44.512-18.496 44.512 18.496T250.016 512t-18.496 44.512-44.512 18.496-44.512-18.496T124 512z m732 28.992H357.984q-15.008 0-25.504-10.496t-10.496-25.504q0-15.008 10.496-25.504t25.504-10.496H856q15.008 0 25.504 10.496t10.496 25.504q0 15.008-10.496 25.504t-25.504 10.496zM124 767.008q0-26.016 18.496-44.512T187.008 704t44.512 18.496 18.496 44.512-18.496 44.512-44.512 18.496-44.512-18.496-18.496-44.512z m732 28.992H357.984q-15.008 0-25.504-10.496t-10.496-25.504q0-15.008 10.496-25.504t25.504-10.496H856q15.008 0 25.504 10.496t10.496 25.504q0 15.008-10.496 25.504t-25.504 10.496z" p-id="2753" fill="#e8e8e8"></path></svg></i>
+        </a>
+    </footer>
+    
+    <div class="clear"></div>
+
+        
+<!-- <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/leancloud-storage/dist/av-min.js"></script> -->
+<script src="https://SylvanasQAQ.github.io/media/js/av-min.js"></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/valine/1.3.10/Valine.Pure.min.js"></script>
+<script>
+    new Valine({
+        el: '#comments',
+        appId: 'eRwxRootBaBzDBwoutG7bLYE-gzGzoHsz' ,
+        appKey: '7NuCOYYcsdap67sNFgVsIHUm',
+        pageSize: 30,
+        placeholder: '既然来了，那就留个痕迹吧~',
+        visitor: true // 阅读量统计
+    })
+</script>
+    
+
+      
+    <script src="https://SylvanasQAQ.github.io/media/js/functions-post.js"></script>
+     <script>
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+	  let halfHeight = document.body.clientHeight*0.8;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop+halfHeight) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop+halfHeight) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    
+
+
+      (function ($) {
+            "use strict";
+                var bt;
+                var isHiden = true;
+
+                window.onmouseup = function(obj){
+                    if(obj.toElement.className == "epcl-button dark" || obj.toElement.className instanceof SVGAnimatedString || obj.toElement.className == "bg-white hosted v" || obj.toElement.className == "toc-container")
+                        return;
+                    if (isHiden == false) {
+                        $('#sidebar11').animate({ right: '-400px' }); //目录块向左移动
+                        isHiden = !isHiden;
+                    }
+                };
+
+                bt = $('#md-toc');
+                $(window).scroll(function () {
+                    var st;
+                    st = $(window).scrollTop();
+                    return bt.css('display', 'block');
+                });
+                return bt.on('click', function (event) {
+                    if (isHiden) {
+                        $('#sidebar11').animate({ right: '0' }).show();//目录块向右移动
+                    } else {
+                        $('#sidebar11').animate({ right: '-400px' }); //目录块向左移动
+                    }
+                    isHiden = !isHiden;
+                    return false;
+                });
+        })(jQuery);
+    </script>
+
+    </div>
+    <!-- end: #wrapper -->
+  </body>
+</html>

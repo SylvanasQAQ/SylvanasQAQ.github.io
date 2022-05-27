@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://SylvanasQAQ.github.io</id>
+    <title>Ayanami&apos;s blog</title>
+    <updated>2022-05-27T14:19:13.035Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <link rel="alternate" href="https://SylvanasQAQ.github.io"/>
+    <link rel="self" href="https://SylvanasQAQ.github.io/atom.xml"/>
+    <subtitle>Life feeds on negative entropy</subtitle>
+    <logo>https://SylvanasQAQ.github.io/images/avatar.png</logo>
+    <icon>https://SylvanasQAQ.github.io/favicon.ico</icon>
+    <rights>All rights reserved 2022, Ayanami&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[Vitis HLS 实现手写数字识别]]></title>
+        <id>https://SylvanasQAQ.github.io/post/bt9ZR2x4y/</id>
+        <link href="https://SylvanasQAQ.github.io/post/bt9ZR2x4y/">
+        </link>
+        <updated>2022-05-27T07:31:38.000Z</updated>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Verilog 语法]]></title>
+        <id>https://SylvanasQAQ.github.io/post/PGELKesQU/</id>
+        <link href="https://SylvanasQAQ.github.io/post/PGELKesQU/">
+        </link>
+        <updated>2022-05-19T04:48:25.000Z</updated>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[第 6 章家庭作业]]></title>
+        <id>https://SylvanasQAQ.github.io/post/0_rHJUypa/</id>
+        <link href="https://SylvanasQAQ.github.io/post/0_rHJUypa/">
+        </link>
+        <updated>2022-04-29T12:38:55.000Z</updated>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[第 5 章家庭作业]]></title>
+        <id>https://SylvanasQAQ.github.io/post/gUdBg3EiE/</id>
+        <link href="https://SylvanasQAQ.github.io/post/gUdBg3EiE/">
+        </link>
+        <updated>2022-04-24T11:12:13.000Z</updated>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[第 5 章 优化程序性能]]></title>
+        <id>https://SylvanasQAQ.github.io/post/-Z1feBTkT/</id>
+        <link href="https://SylvanasQAQ.github.io/post/-Z1feBTkT/">
+        </link>
+        <updated>2022-04-15T15:26:21.000Z</updated>
+    </entry>
+</feed>

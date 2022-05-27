@@ -1,0 +1,974 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>第 5 章 优化程序性能 | Ayanami&#39;s blog</title>
+<meta name="description" content="Life feeds on negative entropy" />
+<link rel="shortcut icon" href="https://SylvanasQAQ.github.io/favicon.ico">
+<link rel="stylesheet" href="https://SylvanasQAQ.github.io/styles/main.css">
+
+<script src="https://SylvanasQAQ.github.io/media/js/jquery.min.js"></script>
+<script src="https://SylvanasQAQ.github.io/media/js/masonry.pkgd.min.js"></script>
+<script src="https://SylvanasQAQ.github.io/media/js/aos.js"></script>
+<script src="https://SylvanasQAQ.github.io/media/js/pace.min.js"></script>
+<script src="https://SylvanasQAQ.github.io/media/js/view-image.min.js"></script>
+<script src="https://SylvanasQAQ.github.io/media/js/jquery.magnific-popup.min.js"></script>
+<script src="https://SylvanasQAQ.github.io/media/js/functions.js"></script>
+
+    <meta name="referrer" content="never">
+    <meta name="description" content="编写高效程序需要做到以下几点：
+
+必须选择一组适当的算法和数据结构
+必须编写出编译器能够有效优化以转换成高效可执行代码的源代码
+
+对于第二点，理解优化编译器的能力和局限性是很重要的，编写程序方式的小变动可能会引起编译器优化方式很大的改变。现..." />
+    <meta name="keywords" content="CSAPP" />
+    <script src="https://SylvanasQAQ.github.io/media/js/waterfall.min.js"></script>
+    <script src="https://SylvanasQAQ.github.io/media/js/prism.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <!-- <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script> -->
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/highlight.js/11.5.1/styles/agate.min.css">
+    <script src="https://cdn.bootcdn.net/ajax/libs/highlight.js/11.5.1/highlight.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/highlight.js/11.5.1/languages/verilog.min.js"></script>  
+    <script>hljs.highlightAll();</script>
+    
+    
+    
+    <style type="text/css">
+        #footer a#md-toc {
+            position: fixed;
+            right: 20px;
+            bottom: 80px;
+            text-align: center;
+            z-index: 99;
+            border: 0;
+            width: 40px;
+            height: 40px;
+            text-align: center;
+            line-height: 40px;
+            padding: 0;
+        }
+
+        #footer a#md-toc img {
+            vertical-align: middle;
+        }
+
+        #footer a#md-toc i.fa {
+            margin: 0;
+        }
+
+        #sidebar11 {
+            position: fixed;
+            height: 40%;
+            width: 300px;
+            right: -400px;
+            top: 30%;
+            z-index: 2147483647;
+	    
+        }
+
+        /* When screen is wider than 800px */
+        @media screen and (min-width: 800px) {
+            .main{
+                width: 85%;
+            }
+        }
+    </style>
+    <!--  -->
+  </head>
+  <body>
+            <header id="header" class="grid-container">
+        <!-- start: .menu-wrapper -->
+        <div class="menu-mobile"> 
+          <i class="fa fa-reorder"></i>
+        </div>
+        <div class="menu-wrapper">
+          <div class="">
+            <div class="logo">
+              <a href="https://SylvanasQAQ.github.io"><img src="/media/images/logoo.png" alt=""></a>
+            </div>
+            <!-- start: .main-nav -->
+
+            <nav class="main-nav grid-container grid-parent">
+              <ul id="menu-header" class="menu gradient-effect">
+                <li class=""><a href="https://SylvanasQAQ.github.io" class="menu">首页</a></li>
+                
+                  <li class="" >
+                    <a href="/archives" class="menu">
+                      归档
+                    </a>
+                  </li>
+                
+                  <li class="" >
+                    <a href="/tags" class="menu">
+                      标签
+                    </a>
+                  </li>
+                
+                  <li class="" >
+                    <a href="/post/about" class="menu">
+                      关于
+                    </a>
+                  </li>
+                
+                <li class="search-menu-item hide-on-mobile hide-on-tablet"><a href="#search-lightbox" class="lightbox mfp-inline"><i class="fa fa-search-line"></i></a></li>
+              </ul>
+            </nav>
+            <a href="#search-lightbox" class="lightbox epcl-search-button mfp-inline hide-on-tablet hide-on-desktop"><i class="fa fa-search-line"></i></a>
+            <!-- end: .main-nav -->
+            <div class="clear"></div>
+            <div class="border hide-on-tablet hide-on-mobile"></div>
+          </div>    
+          <div class="clear"></div>
+        </div>
+        <!-- end: .menu-wrapper -->
+        <div class="clear"></div>
+      </header>
+      <div class="hide-on-mobile hide-on-tablet hide-on-desktop">
+        <div id="search-lightbox" class="grid-container grid-small grid-parent mfp-hide">
+          <div class="search-wrapper section">
+            <form id="gridea-search-form" data-update="1653661119992" action="/search/index.html" class="search-form" _lpchecked="1">
+              <input type="text" name="q" id="s" value="" class="search-field" placeholder="搜点啥..." aria-label="搜点啥..." required="">
+              <button type="submit" class="submit" aria-label="Submit">
+                <i class="fa fa-search-line"></i>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <main id="single" class="main grid-container fullcover no-sidebar aos-init aos-animate" data-aos="fade">
+
+        <div class="center content">
+          <div class="featured-image cover" style="background-image: url('https://SylvanasQAQ.github.io/post-images/-Z1feBTkT.jpg');">
+            <div class="meta top"> 
+              <time class="meta-info" style="float:left;" datetime="04-15-2022"><i class="fa fa-calendar"></i><span class="lately">1 个月前</span></time>
+              
+              <a href="https://SylvanasQAQ.github.io/post/-Z1feBTkT/#comments" class="comments meta-info" title="">
+                <i class="fa fa-comment remixicon"></i><span class="comment-count valine-comment-count" data-xid="/post/-Z1feBTkT/"> </span>
+              </a>
+              <span id="/post/-Z1feBTkT/" class="leancloud_visitors views-counter meta-info" title=""><i class="fa fa-leancloud remixicon"></i><span class="leancloud-visitors-count"></span></span>
+              
+            </div>
+            <div class="info">
+              <div class="tags ">
+                
+                      <a href="https://SylvanasQAQ.github.io/tag/6PZSNKfJ9/" class="ctag ctag-0 ctag-6PZSNKfJ9" aria-label="">CSAPP</a>
+                    
+              </div>
+              <h1 class="title ularge white bold">第 5 章 优化程序性能</h1>
+            </div>
+          </div>
+        </div>  
+
+        <div id="sidebar11" class="bg-white hosted v" style="padding-left: 10px; padding-right: 10px; overflow-y:scroll;">
+            <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#51-%E4%BC%98%E5%8C%96%E7%BC%96%E8%AF%91%E5%99%A8%E7%9A%84%E8%83%BD%E5%8A%9B%E5%92%8C%E5%B1%80%E9%99%90">5.1 优化编译器的能力和局限</a></li>
+<li><a href="#52-%E8%A1%A8%E7%A4%BA%E7%A8%8B%E5%BA%8F%E6%80%A7%E8%83%BD">5.2 表示程序性能</a></li>
+<li><a href="#53-%E7%A8%8B%E5%BA%8F%E7%A4%BA%E4%BE%8B">5.3 程序示例</a></li>
+<li><a href="#54-%E6%B6%88%E9%99%A4%E5%BE%AA%E7%8E%AF%E7%9A%84%E4%BD%8E%E6%95%88%E7%8E%87">5.4 消除循环的低效率</a></li>
+<li><a href="#55-%E5%87%8F%E5%B0%91%E8%BF%87%E7%A8%8B%E8%B0%83%E7%94%A8">5.5 减少过程调用</a></li>
+<li><a href="#56-%E6%B6%88%E9%99%A4%E4%B8%8D%E5%BF%85%E8%A6%81%E7%9A%84%E5%86%85%E5%AD%98%E5%BC%95%E7%94%A8">5.6 消除不必要的内存引用</a></li>
+<li><a href="#57-%E7%90%86%E8%A7%A3%E7%8E%B0%E4%BB%A3%E5%A4%84%E7%90%86%E5%99%A8">5.7 理解现代处理器</a>
+<ul>
+<li><a href="#571-%E6%95%B4%E4%BD%93%E6%93%8D%E4%BD%9C">5.7.1 整体操作</a></li>
+<li><a href="#572-%E5%8A%9F%E8%83%BD%E5%8D%95%E5%85%83%E7%9A%84%E6%80%A7%E8%83%BD">5.7.2 功能单元的性能</a></li>
+<li><a href="#573-%E5%A4%84%E7%90%86%E5%99%A8%E6%93%8D%E4%BD%9C%E7%9A%84%E6%8A%BD%E8%B1%A1%E6%A8%A1%E5%9E%8B">5.7.3 处理器操作的抽象模型</a></li>
+</ul>
+</li>
+<li><a href="#58-%E5%BE%AA%E7%8E%AF%E5%B1%95%E5%BC%80">5.8 循环展开</a></li>
+<li><a href="#59-%E6%8F%90%E9%AB%98%E5%B9%B6%E8%A1%8C%E6%80%A7">5.9 提高并行性</a>
+<ul>
+<li><a href="#591-%E5%A4%9A%E4%B8%AA%E7%B4%AF%E7%A7%AF%E5%8F%98%E9%87%8F">5.9.1 多个累积变量</a></li>
+<li><a href="#592-%E9%87%8D%E6%96%B0%E7%BB%93%E5%90%88%E5%8F%98%E6%8D%A2">5.9.2 重新结合变换</a></li>
+</ul>
+</li>
+<li><a href="#511-%E4%B8%80%E4%BA%9B%E9%99%90%E5%88%B6%E5%9B%A0%E7%B4%A0">5.11 一些限制因素</a>
+<ul>
+<li><a href="#5111-%E5%AF%84%E5%AD%98%E5%99%A8%E6%BA%A2%E5%87%BA">5.11.1 寄存器溢出</a></li>
+<li><a href="#5112-%E5%88%86%E6%94%AF%E9%A2%84%E6%B5%8B%E5%92%8C%E9%A2%84%E6%B5%8B%E9%94%99%E8%AF%AF%E5%A4%84%E7%BD%9A">5.11.2 分支预测和预测错误处罚</a></li>
+</ul>
+</li>
+<li><a href="#512-%E7%90%86%E8%A7%A3%E5%86%85%E5%AD%98%E6%80%A7%E8%83%BD">5.12 理解内存性能</a>
+<ul>
+<li><a href="#5121-%E5%8A%A0%E8%BD%BD%E7%9A%84%E6%80%A7%E8%83%BD">5.12.1 加载的性能</a></li>
+<li><a href="#5122-%E5%AD%98%E5%82%A8%E7%9A%84%E6%80%A7%E8%83%BD">5.12.2 存储的性能</a></li>
+</ul>
+</li>
+<li><a href="#513-%E5%BA%94%E7%94%A8%E6%80%A7%E8%83%BD%E6%8F%90%E9%AB%98%E6%8A%80%E6%9C%AF">5.13 应用：性能提高技术</a></li>
+<li><a href="#515-%E5%B0%8F%E7%BB%93">5.15 小结</a></li>
+</ul>
+
+            </div>
+        </div>
+
+        <div class="epcl-page-wrapper">
+          <div class="left-content grid-70 np-mobile">
+            <article class="main-article post">
+              <section class="post-content">
+                <div class="text">
+                  <p>编写高效程序需要做到以下几点：</p>
+<ol>
+<li>必须选择一组适当的<strong>算法和数据结构</strong></li>
+<li>必须编写出<strong>编译器</strong>能够有效优化以转换成高效可执行代码的源代码</li>
+</ol>
+<p>对于第二点，理解优化编译器的能力和局限性是很重要的，编写程序方式的小变动可能会引起编译器优化方式很大的改变。现代编译器采用了复杂的分析和优化形式，但仍受到<em>妨碍优化的因素</em> (optimization blocker) 的阻碍，这些因素是程序行为中那些严重依赖于执行环境的方面。</p>
+<ol>
+<li>
+<p>消除不必要的工作，让代码尽可能有效地执行所期望的任务：这包括消除不必要的函数调用、条件测试和内存引用，这些优化<strong>不依赖</strong>于目标机器的任何具体属性。</p>
+</li>
+<li>
+<p>利用处理器提供的<em>指令级并行</em> (instruction-level parallelism) 能力，同时执行多条指令。这些优化<strong>需要一个目标机器的模型</strong>，指明如何处理指令以及各个操作的时序特性。</p>
+</li>
+</ol>
+<h1 id="51-优化编译器的能力和局限">5.1 优化编译器的能力和局限</h1>
+<p>大多数编译器 (如 GCC)，向用户提供了一些对它们所使用的优化的控制，最简单的控制就是指定<em>优化级别</em>：</p>
+<ul>
+<li>命令行选项 &quot;-Og&quot; 可以让 GCC 使用一组基本的优化</li>
+<li>命令行选项 &quot;-O1&quot; 或更高 (&quot;-O2&quot; 或 &quot;-O3&quot;) 调用 GCC 会让它使用更大量的优化</li>
+</ul>
+<p>⚠️高级别的优化可以进一步提高程序的性能，但是也可能增加程序的规模 (目标文件大小)，也可能使标准的调试工具更难对程序进行调试。</p>
+<p>编译器对程序只使用<em>安全</em>的优化，即对于程序可能遇到的所有可能的情况，都保证优化后的程序和未优化的版本有一样的行为。看下面的一个例子：</p>
+<pre><code class="language-c">void twiddle1(long *xp, long *yp){
+    // read *xp twice, read *yp twice, write *xp twice
+    *xp += *yp;
+    *xp += *yp;
+}
+
+void twiddle2(long *xp, long *yp){
+    // read *xp once, read *yp once, write *xp once
+    *xp += 2* *yp;
+}
+</code></pre>
+<p>这两个过程似乎有相同的行为，其中函数 <code>twiddle2</code> 效率更高一点，只需要 3 次内存引用，而 <code>twiddle1</code> 需要 6 次。但是考虑 <code>xp</code> 等于 <code>yp</code> 的情况，两个函数的结果并不相同，因此编译器不会产生 <code>twiddle2</code> 风格的代码作为 <code>twiddle1</code> 的优化版本。</p>
+<p>两个指针可能指向同一个内存位置的情况称为<em>内存别名使用</em> (memory aliasing)，这是一个主要的<em>妨碍优化的因素</em>。如果编译器不能确定两个指针是否指向同一个位置，就必须假设什么情况都有可能，这就限制了可能的优化策略。</p>
+<p>编译器的安全优化行为还有一个例子——程序的<em>副作用</em>，考虑下面两个过程：</p>
+<pre><code class="language-c">long f;
+
+long func1() {
+    return f() + f() + f() + f();
+}
+
+long func2() {
+    return 4*f();
+}
+</code></pre>
+<p><code>func2</code> 看似可以作为 <code>func1</code> 的优化版本，但考虑下面 <code>f</code> 的代码：</p>
+<pre><code class="language-c">long counter = 0;
+
+long f() {
+    return counter++;
+}
+</code></pre>
+<p>这个函数有个<strong>副作用</strong>——它修改了全局程序状态的一部分，改变调用它的次数会改变程序的行为。大多数编译器不会试图判断一个函数是否没有副作用，相反编译器会假设最糟的情况，并保持所有的函数调用不变。</p>
+<h1 id="52-表示程序性能">5.2 表示程序性能</h1>
+<p>引入表示程序性能并指导我们改进代码的度量标准：每元素的周期数 (Cycle Per Element, CPE)。CPE 可以帮助我们在更细节的级别上理解迭代程序的循环性能。</p>
+<p>下面展示一个例子来帮助理解 CPE，函数 <code>psum1</code> 和 <code>psum2</code> 计算一个长度为 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">n</span></span></span></span> 的向量的前缀和 (prefix sum)。对于一个向量 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mover accent="true"><mi>a</mi><mo>⃗</mo></mover><mo>=</mo><mrow><mo fence="true">⟨</mo><msub><mi>a</mi><mn>0</mn></msub><mo separator="true">,</mo><msub><mi>a</mi><mn>1</mn></msub><mo separator="true">,</mo><mo>⋯</mo><mtext> </mtext><mo separator="true">,</mo><msub><mi>a</mi><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow></msub><mo fence="true">⟩</mo></mrow></mrow><annotation encoding="application/x-tex">\vec{a}=\left\langle a_{0}, a_{1}, \cdots, a_{n-1}\right\rangle</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.714em;vertical-align:0em;"></span><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.714em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathdefault">a</span></span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.2355em;"><span class="overlay" style="height:0.714em;width:0.471em;"><svg width='0.471em' height='0.714em' style='width:0.471em' viewBox='0 0 471 714' preserveAspectRatio='xMinYMin'><path d='M377 20c0-5.333 1.833-10 5.5-14S391 0 397 0c4.667 0 8.667 1.667 12 5
+3.333 2.667 6.667 9 10 19 6.667 24.667 20.333 43.667 41 57 7.333 4.667 11
+10.667 11 18 0 6-1 10-3 12s-6.667 5-14 9c-28.667 14.667-53.667 35.667-75 63
+-1.333 1.333-3.167 3.5-5.5 6.5s-4 4.833-5 5.5c-1 .667-2.5 1.333-4.5 2s-4.333 1
+-7 1c-4.667 0-9.167-1.833-13.5-5.5S337 184 337 178c0-12.667 15.667-32.333 47-59
+H213l-171-1c-8.667-6-13-12.333-13-19 0-4.667 4.333-11.333 13-20h359
+c-16-25.333-24-45-24-59z'/></svg></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;">⟨</span><span class="mord"><span class="mord mathdefault">a</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">0</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault">a</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="minner">⋯</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault">a</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.301108em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">n</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.208331em;"><span></span></span></span></span></span></span><span class="mclose delimcenter" style="top:0em;">⟩</span></span></span></span></span>，前缀和 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mover accent="true"><mi>p</mi><mo>⃗</mo></mover><mo>=</mo><mrow><mo fence="true">⟨</mo><msub><mi>p</mi><mn>0</mn></msub><mo separator="true">,</mo><msub><mi>p</mi><mn>1</mn></msub><mo separator="true">,</mo><mo>⋯</mo><mtext> </mtext><mo separator="true">,</mo><msub><mi>p</mi><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow></msub><mo fence="true">⟩</mo></mrow></mrow><annotation encoding="application/x-tex">\vec{p}=\left\langle p_{0}, p_{1}, \cdots, p_{n-1}\right\rangle</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9084399999999999em;vertical-align:-0.19444em;"></span><span class="mord accent"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.714em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathdefault">p</span></span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.15216em;"><span class="overlay" style="height:0.714em;width:0.471em;"><svg width='0.471em' height='0.714em' style='width:0.471em' viewBox='0 0 471 714' preserveAspectRatio='xMinYMin'><path d='M377 20c0-5.333 1.833-10 5.5-14S391 0 397 0c4.667 0 8.667 1.667 12 5
+3.333 2.667 6.667 9 10 19 6.667 24.667 20.333 43.667 41 57 7.333 4.667 11
+10.667 11 18 0 6-1 10-3 12s-6.667 5-14 9c-28.667 14.667-53.667 35.667-75 63
+-1.333 1.333-3.167 3.5-5.5 6.5s-4 4.833-5 5.5c-1 .667-2.5 1.333-4.5 2s-4.333 1
+-7 1c-4.667 0-9.167-1.833-13.5-5.5S337 184 337 178c0-12.667 15.667-32.333 47-59
+H213l-171-1c-8.667-6-13-12.333-13-19 0-4.667 4.333-11.333 13-20h359
+c-16-25.333-24-45-24-59z'/></svg></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.19444em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;">⟨</span><span class="mord"><span class="mord mathdefault">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">0</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="minner">⋯</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.301108em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">n</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.208331em;"><span></span></span></span></span></span></span><span class="mclose delimcenter" style="top:0em;">⟩</span></span></span></span></span> 定义为</p>
+<p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mtable><mtr><mtd><mstyle scriptlevel="0" displaystyle="true"><msub><mi>p</mi><mn>0</mn></msub></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mo>=</mo><msub><mi>a</mi><mn>0</mn></msub></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="true"><msub><mi>p</mi><mi>i</mi></msub></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mo>=</mo><msub><mi>p</mi><mrow><mi>i</mi><mo>−</mo><mn>1</mn></mrow></msub><mo>+</mo><msub><mi>a</mi><mi>i</mi></msub><mo separator="true">,</mo><mspace width="1em"/><mn>1</mn><mo>⩽</mo><mi>i</mi><mo>&lt;</mo><mi>n</mi></mrow></mstyle></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{aligned}
+p_{0} &amp;=a_{0} \\
+p_{i} &amp;=p_{i-1}+a_{i}, \quad 1 \leqslant i&lt;n
+\end{aligned}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:3.0000000000000004em;vertical-align:-1.2500000000000002em;"></span><span class="mord"><span class="mtable"><span class="col-align-r"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.7500000000000002em;"><span style="top:-3.91em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathdefault">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">0</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span><span style="top:-2.41em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathdefault">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">i</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.2500000000000002em;"><span></span></span></span></span></span><span class="col-align-l"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.7500000000000002em;"><span style="top:-3.91em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord"><span class="mord mathdefault">a</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">0</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span><span style="top:-2.41em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord"><span class="mord mathdefault">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.311664em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">i</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.208331em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mord"><span class="mord mathdefault">a</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">i</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mspace" style="margin-right:1em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel amsrm">⩽</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord mathdefault">i</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord mathdefault">n</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.2500000000000002em;"><span></span></span></span></span></span></span></span></span></span></span></span></p>
+<pre><code class="language-c">void psum1(float a[], float p[], long n){
+    long i;
+    p[0] = a[0];
+    for (i = 1; i &lt; n; i++)
+        p[i] = p[i-1] + a[i];
+}
+
+void psum2(float a[], float p[], long n){
+    long i;
+    p[0] = a[0];
+    for (i = 1; i &lt; n-1; i++){
+        float mid_val = p[i-1] + a[i];
+        p[i]    = mid_val;
+        p[i+1]  = mid_val + a[i+1];
+    }
+
+    if (i &lt; n)
+        p[i] = p[i-1] + a[i];
+}
+</code></pre>
+<p>函数 <code>psum1</code> 每次迭代计算结果向量的一个元素，函数 <code>psum2</code> 使用循环展开 (loop unrolling) 技术每次迭代计算两个元素。这样一个过程所需要的时间可以用一个常数加上一个与被处理元素个数成正比的因子来描述，下图是这两个函数需要的周期数关于 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">n</span></span></span></span> 的取值范围图。对于较大的 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">n</span></span></span></span> 值，运行时间就会主要由线性因子来决定，根据下图可以得到 <code>psum2</code> 的 CPE 为 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>6.0</mn></mrow><annotation encoding="application/x-tex">6.0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">6</span><span class="mord">.</span><span class="mord">0</span></span></span></span>，优于 CPE 为 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>9.0</mn></mrow><annotation encoding="application/x-tex">9.0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">9</span><span class="mord">.</span><span class="mord">0</span></span></span></span> 的 <code>psum1</code>。</p>
+<figure data-type="image" tabindex="1"><img src="https://s2.loli.net/2022/04/16/DmZYoT5dMiUgaLn.png" alt="两种前缀和函数的性能" width="571" height="352" loading="lazy"></figure>
+<h1 id="53-程序示例">5.3 程序示例</h1>
+<p>为了说明程序是如何被系统地转换成更有效的代码的，使用一个基于<strong>向量数据结构</strong>的<strong>运行示例</strong>进行展示。向量数据结构由两个内存块表示：头部和数据数组。</p>
+<figure data-type="image" tabindex="2"><img src="https://s2.loli.net/2022/04/16/bPMhU1sptXev8GD.png" alt="向量的抽象数据类型" width="373" height="62" loading="lazy"></figure>
+<p>头部的声明如下：</p>
+<pre><code class="language-c">typedef struct {
+    long len;
+    data_t *data;
+} vec_rec, *vec_ptr;
+</code></pre>
+<p>用 <code>data_t</code> 表示基本元素的数据类型，在测试中为度量代码对于整数和浮点数数据的性能，会分别为不同的类型声明编译和运行程序，对数据类型 <code>long</code> 进行测试只需</p>
+<pre><code class="language-c">typedef long data_t;
+</code></pre>
+<p>下面是一些生成向量、访问向量元素以及确定向量长度的基本过程：</p>
+<pre><code class="language-c">vec_ptr new_vec(long len){
+    // Allocate header structure
+    vec_ptr pHeader = (vec_ptr) malloc(sizeof(vec_rec));
+    data_t *pData = NULL;
+    if (!pHeader)
+        return NULL;    // Couldn't allocate storage
+    pHeader-&gt;len = len;
+    // Allocate array
+    if (len &gt; 0){
+        pData = (data_t *) calloc(len, sizeof(data_t));
+        if (!pData){
+            free((void *) pHeader);
+            return NULL;    // Couldn't allocate storage
+        }
+    }
+    // Data will either be NULL or allocated array
+    pHeader-&gt;data = pData;
+    return pHeader;
+}
+
+int get_vec_element(vec_ptr v, long index, data_t *dest){
+    if (index &lt; 0 || index &gt;= v-&gt;len)
+        return 0;   // Out of bounds
+    *dest = v-&gt;data[index];
+    return 1;       // Success
+}
+
+long vec_length(vec_ptr v){
+    return v-&gt;len;
+}
+</code></pre>
+<p>在了解过向量的数据结构后，再考虑下面基于向量的运行示例代码，它使用某种运算，将一个向量中所有的元素合并成一个值。通过使用宏定义 <code>IDENTITY</code> 和 <code>OP</code> 的不同定义，这段代码可以重编译成对数据执行不同的运算。</p>
+<pre><code class="language-c">// 对向量元素求和
+#define IDENTITY 0
+#define OP +
+
+// 计算向量元素的乘积
+#define IDENTITY 1
+#define OP *
+
+void combine1(vec_ptr v, data_t *dest){
+    long i;
+
+    *dest = IDENTITY;
+    for (i = 0; i &lt; vec_length(v); i++) {
+        data_t val;
+        get_vec_element(v, i, &amp;val);
+        *dest = *dest OP val;
+    }
+}
+</code></pre>
+<p>接下来我们将对这段代码进行一系列的变化，写出这个合并函数的不同版本，在 Intel Core i7 Haswell 处理器 (参考机) 上测量这些函数的 CPE 性能。我们会尝试不同的变换，其中有很多只能带来很小的性能提升，而有些则能带来巨大的效果。最好的方法是实验加上分析：反复地尝试不同的方法，进行测量，并检查汇编代码表示以确定底层的性能瓶颈。</p>
+<p>下表是 <code>combine1</code> 的 CPE 度量值 (经过测试，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>32</mn></mrow><annotation encoding="application/x-tex">32</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">3</span><span class="mord">2</span></span></span></span> 位整数操作和 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>64</mn></mrow><annotation encoding="application/x-tex">64</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">6</span><span class="mord">4</span></span></span></span> 位整数操作有相同的性能，单精度和双精度浮点数据的性能也相同，所以在表中只给出整数数据和浮点数据各自的结果)。</p>
+<figure data-type="image" tabindex="3"><img src="https://s2.loli.net/2022/04/18/O62sZavzWC7icVL.png" alt="combine1 的 CPE 度量值" loading="lazy"></figure>
+<p>未经优化的代码是从 C 语言代码到机器代码的直接翻译，通常效率明显较低，养成至少使用 <code>-O1</code> 级别优化的习惯是很好的。</p>
+<h1 id="54-消除循环的低效率">5.4 消除循环的低效率</h1>
+<p><code>combine2</code> 在开始时调用 <code>vec_length</code>，并将结果赋给局部变量 <code>length</code>。对于某些数据类型和操作的组合，这个变换明显地影响了整体性能，对于其他的则只有很小甚至没有影响。</p>
+<pre><code class="language-c">void combine2(vec_ptr v, data_t•dest){
+    long i;
+    long length = vec_length(v);
+
+    *dest = IDENTITY;
+    for (i = 0; i &lt; length; i++) {
+        data_t val;
+        get_vec_element(v, i, &amp;val);
+        *dest = *dest OP val;
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="4"><img src="https://s2.loli.net/2022/04/18/jnHPEWdK7wmrRae.png" alt="combine2 的 CPE 度量值" loading="lazy"></figure>
+<p>这种优化被称为<strong>代码移动</strong>：识别要执行多次但是计算结果不会改变的计算，然后将计算移动到代码前面不会被多次求值的部分。优化编译器会试着进行代码移动，但对于会改变在哪里调用函数或调用多少次的变换，编译器通常会非常小心。它们不能可靠地发现一个函数是否会有副作用，因而假设函数会有副作用。</p>
+<h1 id="55-减少过程调用">5.5 减少过程调用</h1>
+<p>过程调用会带来开销，而且妨碍大多数形式的程序优化。在 <code>combine2</code> 的代码中可以看出，每次循环迭代都会调用 <code>get_vec_element</code> 来获取下一个向量元素。而每次调用这个函数时，它都要把向量索引 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.65952em;vertical-align:0em;"></span><span class="mord mathdefault">i</span></span></span></span> 与循环边界做比较，很明显会造成低效率。在处理任意的数组访问时，边界检查可能是个很有用的特性，而且 <code>combine2</code> 的代码中所有引用都是合法的。</p>
+<p>假设向量的抽象数据类型增加一个函数 <code>get_vec_start</code>，它返回数组的起始地址，借助这个函数我们可以得到过程 <code>combine3</code>。它没有用函数调用来获取每个向量元素，而是直接访问数组。虽然这种变换严重损害了程序的模块性，但如果可以获得性能的大幅提升也可以接受😏。</p>
+<pre><code class="language-c">data_t *get_vec_start(vec_ptr v){
+    return v-&gt;data;
+}
+
+void combine3(vec_ptr v, data_t *dest){
+    long i;
+    long length = vec_length(v);
+    data_t * data = get_vec_start(v);
+
+    *dest = IDENTITY;
+    for (i = 0; i &lt; length; i++) {
+        *dest = *dest OP data[i];
+    }
+}
+</code></pre>
+<p>令人吃惊的是，性能没有明显的提升，整数求和的性能反而还略有下降😱。显然内循环中的其他操作形成了瓶颈，限制性能超过调用 <code>get_vec_element</code>，后面会解释为什么 <code>combine2</code> 中反复的边界检查不会让性能更差 (分支预测)。</p>
+<figure data-type="image" tabindex="5"><img src="https://s2.loli.net/2022/04/18/dmrSUKO73sbBpJY.png" alt="combine3 的 CPE 度量值" loading="lazy"></figure>
+<h1 id="56-消除不必要的内存引用">5.6 消除不必要的内存引用</h1>
+<p><code>combine3</code> 将合并运算计算的值累积在指针 <code>dest</code> 指定的位置，通过检查编译出来的为内循环产生的汇编代码，可以看出这个属性。可以看到每次迭代时，累积变量的数值都要从内存读出再写入到内存。这样的读写很浪费，因为每次迭代开始时从 <code>dest</code> 读出的值就是上次迭代最后写入的值。</p>
+<pre><code class="language-asm">; Inner loop of combine3, data_t = double, OP = *
+; dest in %rbx, data+i in %rdx, data+length in %rax
+.L17:
+    vmovsd    (%rbx), %xmm0                  ; Read product from dest
+    vmulsd     (%rdx), %xmm0, %xmm0
+    vmovsd    %xmm0, (%rbx)                  ; Store product at dest
+    addq        $8, %rdx
+    cmpq       %rax, %rdx
+    jne           .L17
+</code></pre>
+<p>为了消除这种不必要的内存读写，引入一个临时变量 <code>acc</code>，它在循环中用来累积计算出来的值，只有在循环完成之后结果才存放在 <code>dest</code> 中。</p>
+<pre><code class="language-c">void combine4(vec_ptr v, data_t•dest){
+    long i;
+    long length    = vec_length(v);
+    data_t * data = get_vec_start(v);
+    data_t acc = IDENTITY;
+
+    for (i = 0; i &lt; length; i++)
+        acc = acc OP data[i];
+    *dest = acc;
+}
+</code></pre>
+<p>检查汇编代码可以看到，编译器现在可以用寄存器 <code>%xmm0</code> 来保存累积值。与 <code>combine3</code> 中的循环相比，将每次迭代的内存操作从两次读和一次写减少到只需要一次读。</p>
+<pre><code class="language-asm">.L25:
+    vmulsd     (%rdx), %xmm0, %xmm0     ; Multiply acc by data[i]
+    addq        $8, %rdx
+    cmpq       %rax, %rdx
+    jne           .L17
+</code></pre>
+<p>可以看到程序性能有了显著的提高，如下表所示：</p>
+<figure data-type="image" tabindex="6"><img src="https://s2.loli.net/2022/04/18/thJW4BKu2CsTXlk.png" alt="combine4 的 CPE 度量值" loading="lazy"></figure>
+<p>既然 <code>combine4</code> 的提升这么大，编译器能自动将 <code>combine3</code> 的代码转换过去吗？很不幸，由于内存别名使用，两个函数可能会有不同的行为，因此编译器会选择保守地不断读和写内存。考虑下面这种情况：</p>
+<pre><code class="language-c">// data_t = long, OP = *
+// v = [2, 3, 5]
+combine3(v, get_vec_start(v) + 2);      // res = [2, 3, 36]
+combine4(v, get_vec_start(v) + 2);      // res = [2, 3, 30]
+</code></pre>
+<p>当用带命令行选项 <code>-O2</code> 的 GCC 来编译 <code>combine3</code> 时，得到的代码 CPE 性能远好于使用 <code>-O1</code> 的：</p>
+<figure data-type="image" tabindex="7"><img src="https://s2.loli.net/2022/04/18/thc8dbJDsPluv5y.png" alt="&quot;-O2&quot; 编译的 combine3 的 CPE 度量值" loading="lazy"></figure>
+<p>在检查编译器产生的汇编代码时，可以发现对内循环的一个有趣变化：</p>
+<pre><code class="language-asm">; Inner loop of combine3, data_t = double, OP = *. Compiled -O2
+; dest in %rbx, data+i in %rdx, data+length in %rax
+.L22:
+    vmulsd     (%rdx), %xmm0, %xmm0
+    addq        $8, %rdx
+    cmpq       %rax, %rdx
+    vmovsd    %xmm0, (%rbx)                  ; Store product at dest
+    jne           .L22
+</code></pre>
+<p>除了指令顺序有些不同，<code>-O2</code> 与 <code>-O1</code> 优化等级的唯一的区别就是使用更优化的版本不含有 <code>vmovsd</code> 指令，它实现的是从 <code>dest</code> 指定的位置读数据。接下来我们想看看是什么因素在制约着代码的性能，以及为什么减少一条指令可以大幅降低 CPE (写/读相关)。</p>
+<h1 id="57-理解现代处理器">5.7 理解现代处理器</h1>
+<p>到目前为止，所有介绍的优化手段都不依赖于目标机器的任何特性，这些优化只是简单地降低了过程调用的开销，以及消除一些重大的“妨碍优化的因素”。要想进一步提高性能，必须考虑利用处理器<em>微体系结构</em>的优化，也就是处理器用来执行指令的底层系统设计。</p>
+<p>两种下界描述了程序的最大性能：当一系列操作必须按照严格顺序执行时，就会遇到<em>延迟界限</em> (latency bound)；<em>吞吐量界限</em> (throughput bound) 刻画了处理器功能单元的原始计算能力。当代码中的数据相关限制了处理器利用指令级并行的能力时，延迟界限能够限制程序性能。</p>
+<h2 id="571-整体操作">5.7.1 整体操作</h2>
+<p>现代微处理器的特点：</p>
+<ul>
+<li>指令级并行：同时对多条指令求值</li>
+<li>超标量 (superscalar)：可以在每个时钟周期执行多个操作</li>
+<li>乱序 (out-of-order)：指令执行的顺序不 一定要与它们在机器级程序中的顺序一致</li>
+</ul>
+<p>现代微处理器的设计有两个主要部分：</p>
+<ul>
+<li>指令控制单元 (Instruction Control Unit, <strong>ICU</strong>)，从内存中读出指令序列，并根据这些指令序列生成一组针对程序数据的基本操作 (微操作)</li>
+<li>执行单元 (Execution Unit, <strong>EU</strong>)，执行上述生成的基本操作</li>
+</ul>
+<p>ICU 的取指控制逻辑从指令高速缓存 (instruction cache) 中读取指令，指令高速缓存含最近访问的指令。</p>
+<ul>
+<li><em>分支预测</em> (branch prediction) 技术：处理器会猜测是否会选择分支，同时还预测分支的目标地址</li>
+<li><em>投机执行</em> (speculative execution) 技术：处理器会开始取出位于它预测的分支会跳到的地方的指令，并对指令译码，甚至在它确定分支预测是否正确之前就开始执行这些操作<br>
+❌如果过后确定分支预测错误，会将状态重新设置到分支点的状态，并开始取出和执行另一个方向上的指令</li>
+<li><em>退役单元</em> (retirement unit) 记录正在进行的处理，用于防止分支预测错误</li>
+</ul>
+<p>ICU 的指令译码逻辑接收实际的程序指令，并将它们转换成一组基本操作 (微操作)。每个微操作都完成某个简单的计算任务：例如两个数相加，从内存中读数据，或是向内存写数据。</p>
+<p>EU 接收来自取指单元的操作，每个时钟周期会接收多个操作。这些操作会被分派到一组<strong>功能单元</strong>中，它们会执行实际的操作。Intel Core i7 Haswell 参考机有 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>8</mn></mrow><annotation encoding="application/x-tex">8</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">8</span></span></span></span> 个功能单元：</p>
+<figure data-type="image" tabindex="8"><img src="https://s2.loli.net/2022/04/18/QthbMslcAEfYGOI.png" alt="i7 Haswell 的功能单元" width="442" height="227" loading="lazy"></figure>
+<p>执行单元可以直接将结果发送给彼此，控制操作数在执行单元间传送的最常见的机制称为<em>寄存器重命名</em> (register renaming)。通过这种机制，值可以从一个操作直接转发到另一个操作，而不是写到寄存器文件再读出来，使得第二个操作能够在第一个操作完成后尽快开始。</p>
+<figure data-type="image" tabindex="9"><img src="https://s2.loli.net/2022/04/18/8oUV21LlQdA7HIg.png" alt="乱序处理器框图" width="561" height="551" loading="lazy"></figure>
+<h2 id="572-功能单元的性能">5.7.2 功能单元的性能</h2>
+<p>Intel Core i7 Haswell 参考机算术运算的性能可以由以下几个指标衡量：</p>
+<ul>
+<li><strong>延迟</strong> (latency)：完成运算所需要的总时间</li>
+<li><strong>发射时间</strong> (issue time)：两个连续的同类型的运算之间需要的最小时钟周期数</li>
+<li><strong>容量</strong> (capacity)：能够执行该运算的功能单元的数量</li>
+</ul>
+<figure data-type="image" tabindex="10"><img src="https://s2.loli.net/2022/04/21/dCjGm4WS5DeRavz.png" alt="i7 Haswell 的算术运算性能" loading="lazy"></figure>
+<p>从上表可以看出，加法和乘法运算的发射时间都为 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>1</mn></mrow><annotation encoding="application/x-tex">1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span></span></span></span>，即在每个时钟周期处理器都可以开始一条新的这样的运算。这种很短的发射时间是通过<strong>流水线</strong>实现的，发射时间为 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>1</mn></mrow><annotation encoding="application/x-tex">1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span></span></span></span> 的功能单元被称为完全流水线化的 (fully pipelined)。容量大于 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>1</mn></mrow><annotation encoding="application/x-tex">1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span></span></span></span> 的运算是由于有多个功能单元。除法器不是完全流水线化的，其延迟和发射时间是以范围的形式给出的，长延迟和长发射时间使得除法成为了一个相对开销很大的运算。</p>
+<p><strong>最大吞吐量</strong>定义为发射时间的倒数，具有多个功能单元可以进一步提高吞吐量。对一个容量为 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>C</mi></mrow><annotation encoding="application/x-tex">C</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.07153em;">C</span></span></span></span>，发射时间为 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>I</mi></mrow><annotation encoding="application/x-tex">I</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.07847em;">I</span></span></span></span> 的操作来说，处理器<strong>可能</strong>获得的吞吐量为每时钟周期 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>C</mi><mi mathvariant="normal">/</mi><mi>I</mi></mrow><annotation encoding="application/x-tex">C/I</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.07153em;">C</span><span class="mord">/</span><span class="mord mathdefault" style="margin-right:0.07847em;">I</span></span></span></span> 个操作，比如 Haswell 参考机可以每个时钟周期执行两个浮点乘法运算。为什么是可能呢？因为需要从内存读数据，这造成了另一个吞吐量界限。两个加载单元限制了处理器每个时钟周期最多只能读取两个数据值，从而使得吞吐量界限为 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>0.50</mn></mrow><annotation encoding="application/x-tex">0.50</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">0</span><span class="mord">.</span><span class="mord">5</span><span class="mord">0</span></span></span></span> (CPE 值)。</p>
+<figure data-type="image" tabindex="11"><img src="https://s2.loli.net/2022/04/21/cNO9mGBDq4trdEI.png" alt="不同运算的延迟与吞吐量" loading="lazy"></figure>
+<h2 id="573-处理器操作的抽象模型">5.7.3 处理器操作的抽象模型</h2>
+<p>程序的<em>数据流</em> (data-flow) 表示是一种图形化的表示方法，可用于分析机器级程序性能，展示了不同操作之间的数据相关是如何限制它们的执行顺序的，这些限制形成了图中的<strong>关键路径</strong> (critical path)，这是执行一组机器指令所需时钟周期数的一个下界。</p>
+<p>以 <code>combine4</code> 为例描述数据流表示法，将注意力集中在循环执行的计算上，汇编代码如下：</p>
+<pre><code class="language-asm">; Inner loop of combine4. data_t = double, OP = *
+.L25:
+    vmulsd     (%rdx), %xmm0, %xmm0     ; Multiply acc by data[i]
+    addq        $8, %rdx
+    cmpq       %rax, %rdx
+    jne           .L17
+</code></pre>
+<p>指令译码器会把这 4 条指令扩展成五步操作，最开始的乘法指令被扩展成一个 load 操作 (从内存读出源操作数) 和一个 mul 操作。下图中的顶部方框表示循环开始时寄存器的值，底部方框表示最后寄存器的值。某些操作产生的值不对应于任何寄存器，用操作间的弧线表示。</p>
+<figure data-type="image" tabindex="12"><img src="https://s2.loli.net/2022/04/21/k4wCvldyOFsABgG.png" alt="combine4 内循环代码的图形化表示" width="544" height="273" loading="lazy"></figure>
+<p>对于形成循环的代码片段，可以将访问到的寄存器分为四类：</p>
+<ul>
+<li><strong>只读</strong>：只用作源值，在循环中不会被修改</li>
+<li><strong>只写</strong>：作为数据传送操作的目的</li>
+<li><strong>局部</strong>：在循环内部被修改和使用，迭代与迭代之间不相关，比如条件码寄存器 (cmp 操作修改，jne 操作使用)</li>
+<li><strong>循环</strong>：既作为源值，又作为目的，一次迭代中产生的值会在另一次迭代中用到 (⚠️循环寄存器之间的操作链决定了限制性能的数据相关)</li>
+</ul>
+<p>下图 a) 删去了局部寄存器，并将不属于循环寄存器相关链的操作符标识为白色。下图 b) 继续进行简化，只保留了循环寄存器和与其相关的操作符，该图表明的是由于循环的一次迭代在循环寄存器中形成的数据相关。</p>
+<figure data-type="image" tabindex="13"><img src="https://s2.loli.net/2022/04/21/khcgoAfQbDtFPZm.png" alt="简化的数据流图" width="581" height="297" loading="lazy"></figure>
+<p>下图是将上面的 b) 图重复 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">n</span></span></span></span> 次得到的 <code>combine4</code> 内循环 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">n</span></span></span></span> 次迭代的数据流表示，可以看到程序有两条数据相关链。由于浮点乘法延迟大于整数加法延迟，所以左边的链会成为关键路径，需要 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>5</mn><mi>n</mi></mrow><annotation encoding="application/x-tex">5n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">5</span><span class="mord mathdefault">n</span></span></span></span> 个周期执行。</p>
+<figure data-type="image" tabindex="14"><img src="https://s2.loli.net/2022/04/21/apIiyl2U4u6fKoX.png" alt="n 次迭代计算的数据流表示" width="306" height="322" loading="lazy"></figure>
+<p>延迟界限是基本的限制，下面我们重新调整操作的结构，增强指令级并行性，使得 CPE 逼近吞吐量界限✈️。</p>
+<h1 id="58-循环展开">5.8 循环展开</h1>
+<p><strong>循环展开</strong>是一种程序变换，通过增加每次迭代计算的元素的数量，减少循环的迭代次数。循环展开能够从两个方面改进程序的性能：</p>
+<ul>
+<li>减少了不直接有助于程序结果的操作数量，如循环索引计算和条件分支</li>
+<li>提供了可进一步变换代码的方法，减少整个计算中关键路径上的操作数量</li>
+</ul>
+<p><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>k</mi><mo>×</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">k \times 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.77777em;vertical-align:-0.08333em;"></span><span class="mord mathdefault" style="margin-right:0.03148em;">k</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span></span></span></span> 循环展开：循环展开因子为 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>k</mi></mrow><annotation encoding="application/x-tex">k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.03148em;">k</span></span></span></span>，累积因子只在单个变量 <code>acc</code> 中。<code>combine5</code> 使用了 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>2</mn><mo>×</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">2 \times 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">2</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span></span></span></span> 循环展开减小循环开销的影响：</p>
+<pre><code class="language-c">void combine5(vec_ptr v, data_t *dest){
+    long i;
+    long length = vec_length(v);
+    long limit = length-1;          // Jump over the first loop when length &lt; 2
+    data_t *data = get_vec_start(v);
+    data_t acc = IDENTITY;
+
+    for (i = 0; i &lt; limit; i+=2) 
+        acc = (acc OP data[i]) OP data[i+1];
+    
+    for (; i &lt; length; i++)
+        acc = acc OP data[i];
+    *dest = acc;
+}
+</code></pre>
+<figure data-type="image" tabindex="15"><img src="https://s2.loli.net/2022/04/23/yKbmYhcCg4pQEIs.png" alt="combine5 的 CPE 性能" loading="lazy"></figure>
+<p>在上表中可以看到对于整数加法，CPE 有所改进，得到的延迟界限为 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>1.00</mn></mrow><annotation encoding="application/x-tex">1.00</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span><span class="mord">.</span><span class="mord">0</span><span class="mord">0</span></span></span></span>；但其他情况并没有性能提高。要理解为什么 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>k</mi><mo>×</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">k \times 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.77777em;vertical-align:-0.08333em;"></span><span class="mord mathdefault" style="margin-right:0.03148em;">k</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span></span></span></span> 循环展开不能将性能改进到超过延迟界限，需要查看 <code>combine5</code> 的内循环的机器级代码：</p>
+<pre><code class="language-asm">.L35:
+    vmulsd      (%rax, %rdx, 8), %xmm0, %xmm0
+    vmulsd      8(%rax, %rdx, 8), %xmm0, %xmm0
+    addq        $2, %rdx
+    cmpq        %rdx, %rbp
+    jg              .L35
+</code></pre>
+<p>从下面的数据流表示可以看出，图中关键路径还是 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">n</span></span></span></span> 个 mul 操作——迭代次数减半了，但是每次迭代中还是有两个顺序的乘法操作。这个关键路径是循环没有展开代码的性能制约因素，也是 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>k</mi><mo>×</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">k \times 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.77777em;vertical-align:-0.08333em;"></span><span class="mord mathdefault" style="margin-right:0.03148em;">k</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span></span></span></span> 循环展开代码的性能制约因素。</p>
+<figure data-type="image" tabindex="16"><img src="https://s2.loli.net/2022/04/23/FWrN2xUlbvdhLMs.png" alt="combine5 内循环代码的图形化表示" width="277" height="269" loading="lazy"></figure>
+<p>💡编译器可以很容易地执行循环展开，用优化等级 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>3</mn></mrow><annotation encoding="application/x-tex">3</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">3</span></span></span></span> 或更高等级调用 GCC，它就会执行循环展开</p>
+<h1 id="59-提高并行性">5.9 提高并行性</h1>
+<p>程序的性能是受运算单元的延迟限制的，执行加法和乘法的功能单元可以每个时钟周期开始一个新操作，并且这些操作可以被多个功能单元执行。虽然硬件具有以更高速率执行乘法和加法的潜力，但是之前的代码都不能利用这种能力，因为累积值被放在了一个单独的变量 acc 中，在前面的计算完成之前，都不能计算 acc 的新值。现在要考察打破这种顺序相关，得到比延迟界限更好性能的方法。</p>
+<h2 id="591-多个累积变量">5.9.1 多个累积变量</h2>
+<p>对于一个可结合和可交换的合并运算来说 (整数加法或乘法)，可以通过将一组合并运算分割成两个或更多的部分，并在最后合并结果来提高性能。<code>combine6</code> 使用了两次循环展开，以使每次迭代合并更多的元素，索引值为为偶数的元素累积在 <code>acc0</code> 中，索引值为奇数的元素累积在 <code>acc1</code> 中，因此被称为 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>2</mn><mo>×</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">2 \times 2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">2</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">2</span></span></span></span> 循环展开。</p>
+<pre><code class="language-c">void combine6(vec_ptr v, data_t *dest){
+    long i;
+    long length = vec_length(v);
+    long limit = length-1;       
+    data_t *data = get_vec_start(v);
+    data_t acc0 = IDENTITY;
+    data_t acc1 = IDENTITY;
+
+    for (i = 0; i &lt; limit; i+=2) {
+        acc0 = acc0 OP data[i];
+        acc1 = acc1 OP data[i+1];
+    }
+
+    for (; i &lt; length; i++)
+        acc0 = acc0 OP data[i];
+    *dest = acc0 OP acc1;
+}
+</code></pre>
+<p>比较只做循环展开和既做循环展开同时也使用两路并行这两种方法，可以得到下面的性能：</p>
+<figure data-type="image" tabindex="17"><img src="https://s2.loli.net/2022/04/25/812loVpWrU9Ibys.png" alt="combine6 的 CPE 性能" loading="lazy"></figure>
+<p>可以看到所有情况都得到了改进，整数乘、浮点加、浮点乘改进了约 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>2</mn></mrow><annotation encoding="application/x-tex">2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">2</span></span></span></span> 倍，整数加法也有所改进。更棒的是 <code>combine6</code> 打破了由延迟界限设下的限制，处理器不再需要等待前一个运算操作的完成。在下面的数据流图中有两条关键路径，每条关键路径只包含 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi><mi mathvariant="normal">/</mi><mn>2</mn></mrow><annotation encoding="application/x-tex">n/2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">n</span><span class="mord">/</span><span class="mord">2</span></span></span></span> 个操作，因此 CPE 大约为延迟界限的一半。</p>
+<figure data-type="image" tabindex="18"><img src="https://s2.loli.net/2022/04/25/Sa2KdpymczHoPMf.png" alt="combine6 的图形化表示" width="306" height="262" loading="lazy"></figure>
+<p>只有保持能够执行该操作的所有功能单元的流水线都是满的，程序才能达到这个操作的吞吐量界限。对延迟为 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>L</mi></mrow><annotation encoding="application/x-tex">L</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault">L</span></span></span></span>，容量为 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>C</mi></mrow><annotation encoding="application/x-tex">C</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.07153em;">C</span></span></span></span> 的操作而言，要求循环展开因子 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>k</mi><mo>≥</mo><mi>C</mi><mo>⋅</mo><mi>L</mi></mrow><annotation encoding="application/x-tex">k \ge C \cdot L</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83041em;vertical-align:-0.13597em;"></span><span class="mord mathdefault" style="margin-right:0.03148em;">k</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">≥</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.07153em;">C</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault">L</span></span></span></span>。</p>
+<figure data-type="image" tabindex="19"><img src="https://s2.loli.net/2022/04/25/swc13DzUkLmTWt8.png" alt="k 乘 k 循环展开的 CPE 性能" width="562" height="218" loading="lazy"></figure>
+<p>在执行 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>k</mi><mo>×</mo><mi>k</mi></mrow><annotation encoding="application/x-tex">k \times k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.77777em;vertical-align:-0.08333em;"></span><span class="mord mathdefault" style="margin-right:0.03148em;">k</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.03148em;">k</span></span></span></span> 循环展开变换时，必须考虑是否要保留原始函数的功能。补码运算是可交换和可结合的，甚至是当溢出时也是如此。因此对于整数数据类型，<code>combine6</code> 的结果与 <code>combine5</code> 相同，优化编译器能够进行类似的变换来提高整数数据的性能。⚠️浮点乘法和加法不是可结合的，由于四舍五入或溢出，<code>combine5</code> 和 <code>combine6</code> 可能产生不同的结果。因此大多数编译器并不会尝试对浮点数代码进行这种变换，因为它们没有办法判断引入这种会改变程序行为的转换所带来的风险。在面临这种情况时，程序开发人员应该与潜在的用户协商，看是否有特殊的条件可能会导致修改后的算法不能接受，毕竟对于大多数应用程序来说，使性能翻倍要比冒对奇怪的数据模式产生不同的结果的风险更重要。</p>
+<h2 id="592-重新结合变换">5.9.2 重新结合变换</h2>
+<p>做 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>k</mi><mo>×</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">k \times 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.77777em;vertical-align:-0.08333em;"></span><span class="mord mathdefault" style="margin-right:0.03148em;">k</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span></span></span></span> 循环展开的 <code>combine5</code> 没有改变合并向量元素形成和或者乘积中执行的操作，但只需要对代码做很小的改动，我们就可以从根本上改变合并执行的方式，同时极大地提高程序的性能。</p>
+<pre><code class="language-c">    // Conbination operation in combine5
+    acc = (acc OP data[i]) OP data[i+1];
+    // Conbination operation in combine7
+    acc = acc OP (data[i] OP data[i+1]);
+</code></pre>
+<p>差别仅在于两个括号是如何放置的，称这种变换为<strong>重新结合变换</strong> (reassociation transformation)，因为括号改变了向量元素与累积值 acc 的合并顺序，产生了 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>2</mn><mo>×</mo><mn>1</mn><mi>a</mi></mrow><annotation encoding="application/x-tex">2 \times 1a</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">2</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span><span class="mord mathdefault">a</span></span></span></span> 循环展开形式。这种变换虽然微乎其微，但 CPE 性能却好得出乎意料，突破了延迟界限造成的限制：</p>
+<figure data-type="image" tabindex="20"><img src="https://s2.loli.net/2022/04/25/7nxPwpStrl4B9WV.png" alt="combine7 的 CPE 性能" width="782" height="228" loading="lazy"></figure>
+<pre><code class="language-asm">.L39:
+    vmovsd      (%rax, %rdx, 8), %xmm0
+    vmulsd       8(%rax, %rdx, 8), %xmm0, %xmm0
+    vmulsd       %xmm0, %xmm1, %xmm1
+    addq          $2, %rdx
+    cmpq         %rdx, %rbp
+    jg              .L39
+</code></pre>
+<p>来自 <code>vmovsd</code> 和第一个 <code>vmulsd</code> 指令的 load 操作从内存中加载向量元素 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.65952em;vertical-align:0em;"></span><span class="mord mathdefault">i</span></span></span></span> 和 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>i</mi><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">i+1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.74285em;vertical-align:-0.08333em;"></span><span class="mord mathdefault">i</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span></span></span></span>，第一个 mul 操作把它们乘起来，第二个 mul 操作把这个结果乘以累积值 acc。虽然有两个 load 和两个 mul 操作，但是只有一个 mul 操作形成了循环寄存器间的数据相关链，每次迭代内的第一个乘法都不需要等待前一次迭代的累积值就可以执行。</p>
+<figure data-type="image" tabindex="21"><img src="https://s2.loli.net/2022/04/25/hBqeCg1WiAJ8EMG.png" alt="combine7 的数据流图" width="296" height="284" loading="lazy"></figure>
+<p>⚠️重新结合变换也改变了向量元素合并的顺序，对于整数加法和乘法这些可结合运算，重新变换顺序对结果没有影响。对于浮点数情况，必须再次评估这种重新结合是否有可能严重影响结果。对大多数应用来说，这种差别不重要。总的来说，重新结合变换能够减少计算中关键路径上操作的数量，通过更好地利用功能单元的流水线能力得到更好的性能。</p>
+<h1 id="511-一些限制因素">5.11 一些限制因素</h1>
+<p>在一个程序的数据流图表示中可以看出，关键路径指明了执行该程序所需时间的一个基本下界。功能单元的吞吐量界限也是程序执行时间的一个下界，下面介绍其他一些制约程序在实际机器上性能的因素。</p>
+<h2 id="5111-寄存器溢出">5.11.1 寄存器溢出</h2>
+<p>循环并行性的好处受汇编代码描述计算的能力限制，如果并行度 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>p</mi></mrow><annotation encoding="application/x-tex">p</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord mathdefault">p</span></span></span></span> 超过了可用的寄存器数量，编译器会诉诸<strong>溢出</strong> (spilling)，将某些临时值存放到内存中，通常是在运行时堆栈上分配空间。现代 x86-64 处理器有 16 个寄存器，可以使用 16 个 YMM 寄存器来保存浮点数。一旦循环变量的数量超过了可用寄存器的数量，程序就必须在栈上分配一些变量。</p>
+<p>一旦编译器必须要诉诸寄存器溢出，那么维护多个累积变量的优势就很可能消失。不过 x86-64 有足够多的寄存器，大多数循环在出现寄存器溢出之前就将达到吞吐量限制。</p>
+<figure data-type="image" tabindex="22"><img src="https://s2.loli.net/2022/04/25/tZfw3JuenIh7pFV.png" alt="combine6 不同累积变量的 CPE 性能" width="784" height="172" loading="lazy"></figure>
+<h2 id="5112-分支预测和预测错误处罚">5.11.2 分支预测和预测错误处罚</h2>
+<p>💡当分支预测逻辑不能正确预测一个分支是否要跳转的时候，条件分支可能会招致很大的<strong>预测错误处罚</strong>。使用<strong>投机执行</strong>的处理器会开始执行预测的分支目标处的指令，它会避免修改任何实际的寄存器或内存位置，直到确定了实际的结果。如果预测正确，那么处理器会将结果存储到寄存器或内存；如果预测错误，必须丢弃掉所有投机执行的结果。</p>
+<p>现代的 x86 处理器有<strong>条件传送</strong>指令，在编译条件语句和表达式的时候，GCC 能产生使用条件传送指令的代码，而不是更传统的基于控制的条件转移的实现。条件传送指令可以被实现为普通指令流水线化处理的 一部分，没有必要猜测条件是否满足，因此猜测错误也没有处罚。</p>
+<ol>
+<li><strong>不要过分关心可预测的分支</strong></li>
+</ol>
+<p>错误的分支预测的影响可能非常大，但是这并不意味着所有的程序分支都会减缓程序的执行。在合并函数中结束循环的分支通常会被预测为选择分支，因此只在最后一次会导致预测错误处罚。</p>
+<p>当从 <code>combine2</code> 变化到 <code>combine3</code> 时，把函数 <code>get_vec_element</code> 从内循环中拿了出来，但 CPE 基本上没变，即使这个转变消除了每次迭代中用于检查向量索引是否在界限内的两个条件语句。对这个函数来说，这些检测总是确定索引是在界内的，所以是高度可预测的✅。</p>
+<figure data-type="image" tabindex="23"><img src="https://s2.loli.net/2022/04/18/dmrSUKO73sbBpJY.png" alt="combine2 与 combine3 的 CPE 性能比较" loading="lazy"></figure>
+<ol>
+<li><strong>书写适合用条件传送实现的代码</strong></li>
+</ol>
+<p>分支预测只对有规律的模式可行。程序中的许多测试是完全不可预测的，依赖于数据的任意特性，例如一个数是负数还是正数。对于这些测试，分支预测逻辑会处理得很糟糕。对于本质上无法预测的情况，如果编译器能够产生<strong>使用条件数据传送</strong>而不是使用条件控制转移的代码，可以极大地提高程序的性能。这不是 C 语言程序员可以直接控制的，但是有些表达条件行为的方法能够更直接地被翻译成条件传送，而不是其他操作。</p>
+<ul>
+<li><strong>功能性</strong>风格：用条件操作来计算值，然后用这些值来更新程序状态</li>
+<li><strong>命令式</strong>风格：用条件语句来有选择地更新程序状态</li>
+</ul>
+<p>💡GCC 能够为功能性风格书写的代码产生条件传送</p>
+<pre><code class="language-c">// 命令式风格，随机数据上的 CPE 性能为 13.50
+// 可预测数据的 CPE 为 2.5~3.5，预测错误乘法为 20 个周期
+void minmax1(long a[], long b [], long n) {
+    long i;
+    for (i = 0; i &lt; n; i++){
+        if (a[i] &gt; b[i]) {
+            long t = a[i];
+            a[i] = b[i];
+            b[i] = t;
+        }
+    }
+
+// 功能性风格，随机数据上的 CPE 性能为 4.0
+void minmax2(long a[], long b [], long n) {
+    long i;
+    for (i = 0; i &lt; n; i++){
+        long min = a[i] &lt; b[i] ? a[i] : b[i];
+        long max = a[i] &lt; b[i] ? b[i] : a[i];
+        a[i] = max;
+        b[i] = min;
+    }
+}
+</code></pre>
+<h1 id="512-理解内存性能">5.12 理解内存性能</h1>
+<p>现代处理器有专门的功能单元来执行加载和存储操作，这些单元有内部的缓冲区来保存未完成的内存操作请求集合：Intel Core i7 Haswell 有两个加载单元，每一个可以保存多达 72 个未完成的读请求、最多 42 个写请求。</p>
+<h2 id="5121-加载的性能">5.12.1 加载的性能</h2>
+<p>一个包含加载操作的程序的性能既依赖于流水线的能力，依赖于加载单元的延迟。对两个加载单元而言，其每个时钟周期只能启动一条加载操作，所以 CPE 不可能小于 0.50。要确定一台机器上加载操作的延迟，可以建立由一系列加载操作组成的一个计算，一条加载操作的结果决定下一条操作的地址。比如计算链表长度的函数 <code>list_len</code>，测试表明其 CPE 为 4.00，这直接表明了加载操作的延迟，该结果也与 L1 级 cache 的 4 周期访问时间是一致的。</p>
+<h2 id="5122-存储的性能">5.12.2 存储的性能</h2>
+<p>与加载操作一样，在大多数情况中，存储操作能够在完全流水线化的模式中工作，每个周期开始一条新的存储。下面的函数将一个长度为 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">n</span></span></span></span> 的数组 dest 的元素设置为 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>0</mn></mrow><annotation encoding="application/x-tex">0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">0</span></span></span></span>，其 CPE 等于 1.00，对于只具有单个存储功能单元的机器，这巳经达到了最佳情况。</p>
+<pre><code class="language-c">void clear_array(long *dest, long n) {
+    long i;
+    for (i = 0; i &lt; n; i++)
+        dest[i] = 0;
+}
+</code></pre>
+<p>存储操作并不影响任何寄存器值，所以一系列存储操作不会产生数据相关，只有加载操作会受存储操作结果的影响，因为只有加载操作能从由存储操作写的那个位置读回值。在下面的示例中，当 src 指向数组元素 <code>a[0]</code>，而 dest 指向数组元素 <code>a[1]</code> 时，从 src 读出的结果不受对 dest 的写的影响，这种情况下的 CPE 等于 1.3。如果 src 和 dest 都指向数组元素 <code>a[0]</code> 时，src 的每次加载都会得到指针引用 <code>*dest</code> 的前次执行存储的值，CPE 为 7.3。这种现象称为<strong>写/读相关</strong> (write/read dependency)，写/读相关导致处理速度下降约 6 个时钟周期。</p>
+<pre><code class="language-c">void write_read(long *src, long *dest, long n){
+    long cnt = n;
+    long val = 0;
+
+    while (cnt) {
+        *dest = val;
+        val = (*src) + 1;
+        cnt--;
+    }
+}
+</code></pre>
+<p>要了解这两种情况的性能差异为什么这么大，必须仔细地看看加载和存储执行单元。存储单元包含一个<strong>存储缓冲区</strong>，它包含已经被发射到存储单元而又还没有完成的存储操作的地址和数据，这里的完成包括更新数据高速缓存。当一个加载操作发生时，它<strong>必须检查存储缓冲区中的条目</strong>，看有没有地址相匹配。如果有地址相匹配，它就取出相应的数据条目作为加载操作的结果。</p>
+<figure data-type="image" tabindex="24"><img src="https://s2.loli.net/2022/04/25/a5erw1pZoDCt2kG.png" alt="加载和存储单元的细节" width="324" height="236" loading="lazy"></figure>
+<p><code>movq %rax, (%rsi)</code> 被翻译为两个操作：</p>
+<ul>
+<li>s_addr：计算存储操作的地址，在存储缓冲区创建一个条目</li>
+<li>s_data：计算该条目的数据字段</li>
+</ul>
+<p>而 <code>movq (%rdi), %rax</code> 译码得到的 load 操作必须检查所有未完成的存储操作的地址，在这个操作和 s_addr 操作之间创建一个数据相关。s_data 和 load 操作之间的数据相关是有条件的：如果两个地址相同，load 操作必须等待直到 s_data 将它的结果存放到存储缓冲区中；如果两个地址不同，两个操作就可以独立地进行。</p>
+<p>下图说明了 <code>write_read</code> 内循环操作之间的数据相关：弧线①表示存储地址必须在数据被存储之前计算出来，弧线②表示需要 load 操作将它的地址与所有未完成的存储操作的地址进行比较，虚线③表示条件数据相关， 当加载和存储地址相同时会出现。</p>
+<figure data-type="image" tabindex="25"><img src="https://s2.loli.net/2022/04/24/invqoAMHY1L84t7.png" alt="write_read 的数据流图表示" width="546" height="322" loading="lazy"></figure>
+<p>当 src 和 dest 不同时，加载和存储操作可以独立进行，因此唯一的关键路径是由减少变量 cnt 形成的，此时 CPE 为 1.0。当 src 和 dest 相同时，s_data 和 load 指令之间的数据相关使得关键路径的形成包括了存储、加载和增加数据，此时 CPE 超过 7.0。</p>
+<figure data-type="image" tabindex="26"><img src="https://s2.loli.net/2022/04/24/j6l7duncaCqJQx2.png" alt="write_read 的数据流表示" width="446" height="284" loading="lazy"></figure>
+<h1 id="513-应用性能提高技术">5.13 应用：性能提高技术</h1>
+<ol>
+<li>高级设计：选择适当的算法和数据结构</li>
+<li>基本编码原则：消除连续的函数调用，消除不必要的内存引用</li>
+<li>低级优化：循环展开，多个累积变量，重新结合技术，功能性风格重写条件操作</li>
+</ol>
+<h1 id="515-小结">5.15 小结</h1>
+<p>没有任何编译器能用一个<strong>好的算法或数据结构</strong>代替低效率的算法或数据结构，因此程序设计的这些方面仍然应该是程序员主要关心的。<strong>妨碍优化的因素</strong>，如内存别名使用和过程调用，也会严重限制编译器执行大量优化的能力。这些应该被看作好的编程习惯的一部分，消除不必要的工作。</p>
+<p>拥有一些对<strong>处理器微体系结构</strong>的理解，如操作、容量、延迟和功能单元发射时间的信息，就能够基本地预测程序的性能了。使用现代处理器提供的<strong>指令级并行技术</strong>：循环展开、创建多个累积变量和重新结合。确认由程序中的数据相关决定的关键路径，尤其是循环的不同迭代之间的数据相关，会收获良多。</p>
+<p>包含条件分支或与内存系统复杂交互的程序，更难以分析和优化。基本策略是使分支更容易预测，或者使它们很容易用条件数据传送来实现。还必须注意存储和加载操作，将数值保存在局部变量中，使得它们可以存放在寄存器中。</p>
+
+                </div>
+                <div class="clear"></div>
+              </section>
+            </article>
+            <div class="clear"></div>
+
+        
+
+            <section class="related section">
+              
+              <article class="prev grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://SylvanasQAQ.github.io/post-images/gUdBg3EiE.jpg');"></div>
+                 <a href="https://SylvanasQAQ.github.io/post/gUdBg3EiE/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="04-24-2022">04-24-2022</time>
+                  <h4 class="title white no-margin">第 5 章家庭作业</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://SylvanasQAQ.github.io/media/images/left-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+              
+
+                <div class="clear"></div>
+            </section>
+
+              <div class="clear"></div>
+              
+            
+              <div id="comments" class="bg-white hosted ">
+                <div class="clear"></div>
+<script>
+jQuery(document).ready(function($){
+    $('.vemoji-btn').text('😀');
+    $("#comments").on('click', 'span.vat',function(){
+        $(this).parent('div.vmeta').next("div.vcontent").after($("div.vwrap"));
+        $('textarea#veditor').focus();
+    })
+    if(window.location.hash){
+        var checkExist = setInterval(function() {
+            if ($(window.location.hash).length) {
+                $('html, body').animate({scrollTop: $(window.location.hash).offset().top-200}, 600);
+                clearInterval(checkExist);
+            }
+        }, 100);
+    }
+})
+</script>
+
+              </div>
+            
+
+            </div>
+          </div>
+      </main>
+
+          <footer id="footer" class="grid-container">
+        <div class="widgets row gradient-effect">
+            <div class="default-sidebar border-effect">
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_epcl_posts_thumbs underline-effect">
+                  <h4 class="widget-title title white bordered">最新文章</h4>
+                  
+                  
+                  <article class="item post-0 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://SylvanasQAQ.github.io/post/bt9ZR2x4y/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://SylvanasQAQ.github.io/post-images/bt9ZR2x4y.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="05-27-2022">05-27-2022</time>
+                      <h4 class="title usmall">
+                        <a href="https://SylvanasQAQ.github.io/post/bt9ZR2x4y/">Vitis HLS 实现手写数字识别</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-1 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://SylvanasQAQ.github.io/post/PGELKesQU/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://SylvanasQAQ.github.io/post-images/PGELKesQU.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="05-19-2022">05-19-2022</time>
+                      <h4 class="title usmall">
+                        <a href="https://SylvanasQAQ.github.io/post/PGELKesQU/">Verilog 语法</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-2 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://SylvanasQAQ.github.io/post/0_rHJUypa/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://SylvanasQAQ.github.io/post-images/0_rHJUypa.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="04-29-2022">04-29-2022</time>
+                      <h4 class="title usmall">
+                        <a href="https://SylvanasQAQ.github.io/post/0_rHJUypa/">第 6 章家庭作业</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_tag_cloud underline-effect">
+                  <h4 class="widget-title title white bordered">标签云</h4>
+                  <div class="tagcloud">
+                    
+                      <a href="https://SylvanasQAQ.github.io/tag/8q-hvEy6h/" class="ctag ctag-0 ctag-8q-hvEy6h" aria-label="">FPGA</a>
+                    
+                      <a href="https://SylvanasQAQ.github.io/tag/6PZSNKfJ9/" class="ctag ctag-1 ctag-6PZSNKfJ9" aria-label="">CSAPP</a>
+                    
+                  </div>
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="epcl_about-2" class="widget widget_epcl_about underline-effect">
+                  <h4 class="widget-title title white bordered">关于我</h4>
+                  <div class="avatar">
+                    <a href="" class="translate-effect thumb"><span class="fullimage cover" style="background-image: url(https://SylvanasQAQ.github.io/images/avatar.png);"></span></a>
+                  </div>
+                  <div class="info">
+                    <h4 class="title small author-name gradient-effect no-margin"><a href="https://SylvanasQAQ.github.io/post/about ">Ayanami&#39;s blog</a></h4>
+                    <p class="founder">Life feeds on negative entropy</p>
+                    <div class="social">
+                      
+                          
+                            <a href="https://github.com/SylvanasQAQ" class="translate-effect" target="_blank"><i class="fa fa-github"></i></a>
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                    </div> 
+                  </div>
+                  <div class="clear"></div>
+                  </section>
+              </div>
+
+            </div>
+            <div class="clear"></div>
+        </div>
+
+        <div class="logo">
+          <a href="https://SylvanasQAQ.github.io"><img src="/media/images/gridea.png" alt=""></a>
+        </div>
+        <p class="published border-effect">
+          ©2022 共 6 篇文章
+          <br/>
+          Theme <a href="https://gridea.dev/" target="_blank">「breek」</a> Powered by <a href="https://gridea.dev/" target="_blank">「Gridea」</a>
+        </p>
+        
+        <a href="javascript:void(0)" id="back-to-top" class="epcl-button dark" style="display:none">
+          <i class="fa fa-arrow"></i>
+        </a>
+
+        <a href="javascript:void(0)" id="md-toc" class="epcl-button dark" style="display:none">
+          <i class="fa"><svg t="1650112028452" class="icon" viewBox="0 -150 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2752" width="30" height="30"><path d="M124 256.992q0-26.016 18.496-44.512t44.512-18.496 44.512 18.496 18.496 44.512-18.496 44.512T187.008 320t-44.512-18.496-18.496-44.512z m732 29.024H357.984q-15.008 0-25.504-10.496t-10.496-25.504q0-15.008 10.496-25.504t25.504-10.496H856q15.008 0 25.504 10.496t10.496 25.504q0 15.008-10.496 25.504t-25.504 10.496zM124 512q0-26.016 18.496-44.512t44.512-18.496 44.512 18.496T250.016 512t-18.496 44.512-44.512 18.496-44.512-18.496T124 512z m732 28.992H357.984q-15.008 0-25.504-10.496t-10.496-25.504q0-15.008 10.496-25.504t25.504-10.496H856q15.008 0 25.504 10.496t10.496 25.504q0 15.008-10.496 25.504t-25.504 10.496zM124 767.008q0-26.016 18.496-44.512T187.008 704t44.512 18.496 18.496 44.512-18.496 44.512-44.512 18.496-44.512-18.496-18.496-44.512z m732 28.992H357.984q-15.008 0-25.504-10.496t-10.496-25.504q0-15.008 10.496-25.504t25.504-10.496H856q15.008 0 25.504 10.496t10.496 25.504q0 15.008-10.496 25.504t-25.504 10.496z" p-id="2753" fill="#e8e8e8"></path></svg></i>
+        </a>
+    </footer>
+    
+    <div class="clear"></div>
+
+        
+<!-- <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/leancloud-storage/dist/av-min.js"></script> -->
+<script src="https://SylvanasQAQ.github.io/media/js/av-min.js"></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/valine/1.3.10/Valine.Pure.min.js"></script>
+<script>
+    new Valine({
+        el: '#comments',
+        appId: 'eRwxRootBaBzDBwoutG7bLYE-gzGzoHsz' ,
+        appKey: '7NuCOYYcsdap67sNFgVsIHUm',
+        pageSize: 30,
+        placeholder: '既然来了，那就留个痕迹吧~',
+        visitor: true // 阅读量统计
+    })
+</script>
+    
+
+      
+    <script src="https://SylvanasQAQ.github.io/media/js/functions-post.js"></script>
+     <script>
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+	  let halfHeight = document.body.clientHeight*0.8;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop+halfHeight) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop+halfHeight) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    
+
+
+      (function ($) {
+            "use strict";
+                var bt;
+                var isHiden = true;
+
+                window.onmouseup = function(obj){
+                    if(obj.toElement.className == "epcl-button dark" || obj.toElement.className instanceof SVGAnimatedString || obj.toElement.className == "bg-white hosted v" || obj.toElement.className == "toc-container")
+                        return;
+                    if (isHiden == false) {
+                        $('#sidebar11').animate({ right: '-400px' }); //目录块向左移动
+                        isHiden = !isHiden;
+                    }
+                };
+
+                bt = $('#md-toc');
+                $(window).scroll(function () {
+                    var st;
+                    st = $(window).scrollTop();
+                    return bt.css('display', 'block');
+                });
+                return bt.on('click', function (event) {
+                    if (isHiden) {
+                        $('#sidebar11').animate({ right: '0' }).show();//目录块向右移动
+                    } else {
+                        $('#sidebar11').animate({ right: '-400px' }); //目录块向左移动
+                    }
+                    isHiden = !isHiden;
+                    return false;
+                });
+        })(jQuery);
+    </script>
+
+    </div>
+    <!-- end: #wrapper -->
+  </body>
+</html>

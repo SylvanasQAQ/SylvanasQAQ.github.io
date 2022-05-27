@@ -1,0 +1,1143 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Verilog 语法 | Ayanami&#39;s blog</title>
+<meta name="description" content="Life feeds on negative entropy" />
+<link rel="shortcut icon" href="https://SylvanasQAQ.github.io/favicon.ico">
+<link rel="stylesheet" href="https://SylvanasQAQ.github.io/styles/main.css">
+
+<script src="https://SylvanasQAQ.github.io/media/js/jquery.min.js"></script>
+<script src="https://SylvanasQAQ.github.io/media/js/masonry.pkgd.min.js"></script>
+<script src="https://SylvanasQAQ.github.io/media/js/aos.js"></script>
+<script src="https://SylvanasQAQ.github.io/media/js/pace.min.js"></script>
+<script src="https://SylvanasQAQ.github.io/media/js/view-image.min.js"></script>
+<script src="https://SylvanasQAQ.github.io/media/js/jquery.magnific-popup.min.js"></script>
+<script src="https://SylvanasQAQ.github.io/media/js/functions.js"></script>
+
+    <meta name="referrer" content="never">
+    <meta name="description" content="本文大部分内容来自《数字设计和计算机体系结构》第二版第 4 章——硬件描述语言。
+1 引言
+在更高的抽象层描述数字电路的逻辑功能，使用计算机辅助设计 (Computer-Aided Design, CAD) 工具来生成优化的门电路，可以获得..." />
+    <meta name="keywords" content="FPGA" />
+    <script src="https://SylvanasQAQ.github.io/media/js/waterfall.min.js"></script>
+    <script src="https://SylvanasQAQ.github.io/media/js/prism.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <!-- <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script> -->
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/highlight.js/11.5.1/styles/agate.min.css">
+    <script src="https://cdn.bootcdn.net/ajax/libs/highlight.js/11.5.1/highlight.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/highlight.js/11.5.1/languages/verilog.min.js"></script>  
+    <script>hljs.highlightAll();</script>
+    
+    
+    
+    <style type="text/css">
+        #footer a#md-toc {
+            position: fixed;
+            right: 20px;
+            bottom: 80px;
+            text-align: center;
+            z-index: 99;
+            border: 0;
+            width: 40px;
+            height: 40px;
+            text-align: center;
+            line-height: 40px;
+            padding: 0;
+        }
+
+        #footer a#md-toc img {
+            vertical-align: middle;
+        }
+
+        #footer a#md-toc i.fa {
+            margin: 0;
+        }
+
+        #sidebar11 {
+            position: fixed;
+            height: 40%;
+            width: 300px;
+            right: -400px;
+            top: 30%;
+            z-index: 2147483647;
+	    
+        }
+
+        /* When screen is wider than 800px */
+        @media screen and (min-width: 800px) {
+            .main{
+                width: 85%;
+            }
+        }
+    </style>
+    <!--  -->
+  </head>
+  <body>
+            <header id="header" class="grid-container">
+        <!-- start: .menu-wrapper -->
+        <div class="menu-mobile"> 
+          <i class="fa fa-reorder"></i>
+        </div>
+        <div class="menu-wrapper">
+          <div class="">
+            <div class="logo">
+              <a href="https://SylvanasQAQ.github.io"><img src="/media/images/logoo.png" alt=""></a>
+            </div>
+            <!-- start: .main-nav -->
+
+            <nav class="main-nav grid-container grid-parent">
+              <ul id="menu-header" class="menu gradient-effect">
+                <li class=""><a href="https://SylvanasQAQ.github.io" class="menu">首页</a></li>
+                
+                  <li class="" >
+                    <a href="/archives" class="menu">
+                      归档
+                    </a>
+                  </li>
+                
+                  <li class="" >
+                    <a href="/tags" class="menu">
+                      标签
+                    </a>
+                  </li>
+                
+                  <li class="" >
+                    <a href="/post/about" class="menu">
+                      关于
+                    </a>
+                  </li>
+                
+                <li class="search-menu-item hide-on-mobile hide-on-tablet"><a href="#search-lightbox" class="lightbox mfp-inline"><i class="fa fa-search-line"></i></a></li>
+              </ul>
+            </nav>
+            <a href="#search-lightbox" class="lightbox epcl-search-button mfp-inline hide-on-tablet hide-on-desktop"><i class="fa fa-search-line"></i></a>
+            <!-- end: .main-nav -->
+            <div class="clear"></div>
+            <div class="border hide-on-tablet hide-on-mobile"></div>
+          </div>    
+          <div class="clear"></div>
+        </div>
+        <!-- end: .menu-wrapper -->
+        <div class="clear"></div>
+      </header>
+      <div class="hide-on-mobile hide-on-tablet hide-on-desktop">
+        <div id="search-lightbox" class="grid-container grid-small grid-parent mfp-hide">
+          <div class="search-wrapper section">
+            <form id="gridea-search-form" data-update="1653661119992" action="/search/index.html" class="search-form" _lpchecked="1">
+              <input type="text" name="q" id="s" value="" class="search-field" placeholder="搜点啥..." aria-label="搜点啥..." required="">
+              <button type="submit" class="submit" aria-label="Submit">
+                <i class="fa fa-search-line"></i>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <main id="single" class="main grid-container fullcover no-sidebar aos-init aos-animate" data-aos="fade">
+
+        <div class="center content">
+          <div class="featured-image cover" style="background-image: url('https://SylvanasQAQ.github.io/post-images/PGELKesQU.jpg');">
+            <div class="meta top"> 
+              <time class="meta-info" style="float:left;" datetime="05-19-2022"><i class="fa fa-calendar"></i><span class="lately">8 天前</span></time>
+              
+              <a href="https://SylvanasQAQ.github.io/post/PGELKesQU/#comments" class="comments meta-info" title="">
+                <i class="fa fa-comment remixicon"></i><span class="comment-count valine-comment-count" data-xid="/post/PGELKesQU/"> </span>
+              </a>
+              <span id="/post/PGELKesQU/" class="leancloud_visitors views-counter meta-info" title=""><i class="fa fa-leancloud remixicon"></i><span class="leancloud-visitors-count"></span></span>
+              
+            </div>
+            <div class="info">
+              <div class="tags ">
+                
+                      <a href="https://SylvanasQAQ.github.io/tag/8q-hvEy6h/" class="ctag ctag-0 ctag-8q-hvEy6h" aria-label="">FPGA</a>
+                    
+              </div>
+              <h1 class="title ularge white bold">Verilog 语法</h1>
+            </div>
+          </div>
+        </div>  
+
+        <div id="sidebar11" class="bg-white hosted v" style="padding-left: 10px; padding-right: 10px; overflow-y:scroll;">
+            <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#1-%E5%BC%95%E8%A8%80">1 引言</a>
+<ul>
+<li><a href="#11-%E6%A8%A1%E5%9D%97">1.1 模块</a></li>
+<li><a href="#12-%E6%A8%A1%E6%8B%9F%E5%92%8C%E7%BB%BC%E5%90%88">1.2 模拟和综合</a></li>
+</ul>
+</li>
+<li><a href="#2-%E7%BB%84%E5%90%88%E9%80%BB%E8%BE%91">2 组合逻辑</a>
+<ul>
+<li><a href="#21-%E4%BD%8D%E8%BF%90%E7%AE%97%E7%AC%A6">2.1 位运算符</a></li>
+<li><a href="#22-%E6%B3%A8%E9%87%8A%E5%92%8C%E7%A9%BA%E7%99%BD">2.2 注释和空白</a></li>
+<li><a href="#23-%E7%BC%A9%E4%BD%8D%E8%BF%90%E7%AE%97%E7%AC%A6">2.3 缩位运算符</a></li>
+<li><a href="#24-%E6%9D%A1%E4%BB%B6%E8%B5%8B%E5%80%BC">2.4 条件赋值</a></li>
+<li><a href="#25-%E5%86%85%E9%83%A8%E5%8F%98%E9%87%8F">2.5 内部变量</a></li>
+<li><a href="#26-%E4%BC%98%E5%85%88%E7%BA%A7">2.6 优先级</a></li>
+<li><a href="#27-%E6%95%B0%E5%AD%97">2.7 数字</a></li>
+<li><a href="#28-z-%E5%92%8C-x">2.8 Z 和 X</a></li>
+<li><a href="#29-%E4%BD%8D%E6%B7%B7%E5%90%88">2.9 位混合</a></li>
+<li><a href="#210-%E5%BB%B6%E8%BF%9F">2.10 延迟</a></li>
+</ul>
+</li>
+<li><a href="#3-%E7%BB%93%E6%9E%84%E5%8C%96%E5%BB%BA%E6%A8%A1">3 结构化建模</a></li>
+<li><a href="#4-%E6%97%B6%E5%BA%8F%E9%80%BB%E8%BE%91">4 时序逻辑</a>
+<ul>
+<li><a href="#41-%E5%AF%84%E5%AD%98%E5%99%A8">4.1 寄存器</a></li>
+<li><a href="#42-%E5%A4%8D%E4%BD%8D%E5%AF%84%E5%AD%98%E5%99%A8">4.2 复位寄存器</a></li>
+<li><a href="#43-%E5%A4%9A%E5%AF%84%E5%AD%98%E5%99%A8">4.3 多寄存器</a></li>
+<li><a href="#44-%E9%94%81%E5%AD%98%E5%99%A8">4.4 锁存器</a></li>
+</ul>
+</li>
+<li><a href="#5-%E6%9B%B4%E5%A4%9A%E7%BB%84%E5%90%88%E9%80%BB%E8%BE%91">5 更多组合逻辑</a>
+<ul>
+<li><a href="#51-case-%E8%AF%AD%E5%8F%A5">5.1 case 语句</a></li>
+<li><a href="#52-if-%E8%AF%AD%E5%8F%A5">5.2 if 语句</a></li>
+<li><a href="#53-%E5%B8%A6%E6%9C%89%E6%97%A0%E5%85%B3%E9%A1%B9%E7%9A%84%E7%9C%9F%E5%80%BC%E8%A1%A8">5.3 带有无关项的真值表</a></li>
+<li><a href="#54-%E9%98%BB%E5%A1%9E%E8%B5%8B%E5%80%BC%E5%92%8C%E9%9D%9E%E9%98%BB%E5%A1%9E%E8%B5%8B%E5%80%BC">5.4 阻塞赋值和非阻塞赋值</a></li>
+</ul>
+</li>
+<li><a href="#6-%E6%9C%89%E9%99%90%E7%8A%B6%E6%80%81%E6%9C%BA">6 有限状态机</a></li>
+<li><a href="#7-%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B">7 数据类型</a></li>
+<li><a href="#8-%E5%8F%82%E6%95%B0%E5%8C%96%E6%A8%A1%E5%9D%97">8 参数化模块</a></li>
+<li><a href="#9-%E6%B5%8B%E8%AF%95%E7%A8%8B%E5%BA%8F">9 测试程序</a></li>
+<li><a href="#10-%E6%80%BB%E7%BB%93">10 总结</a></li>
+</ul>
+
+            </div>
+        </div>
+
+        <div class="epcl-page-wrapper">
+          <div class="left-content grid-70 np-mobile">
+            <article class="main-article post">
+              <section class="post-content">
+                <div class="text">
+                  <p>本文大部分内容来自《数字设计和计算机体系结构》第二版第 4 章——硬件描述语言。</p>
+<h1 id="1-引言">1 引言</h1>
+<p>在更高的抽象层描述数字电路的逻辑功能，使用计算机辅助设计 (Computer-Aided Design, CAD) 工具来生成优化的门电路，可以获得更高的设计效率。对硬件的描述通常由<strong>硬件描述语言</strong> (Hardware Description Language, HDL) 给出，现在有两种主要的硬件描述语言，它们分别是 <strong>SystemVerilog</strong> 和 <strong>VHDL</strong>。</p>
+<p>VHDL 比 SystemVerilog 的语句冗长且不灵活，工业界倾向于使用 SystemVerilog。但两种语言都足以描述任何的硬件系统，也都各自有自己的特点。一门最好的语言就是在你的环境里已经使用的语言或者是客户要求使用的语言。SystemVerilog 和 VHDL 的基本原理很相似，但二者的语法却有所不同，本文将简要介绍 SystemVerilog 的语法。</p>
+<p>Verilog 于 1990 年成为一个公开的标准，1995 年成为 IEEE 标准。Verilog 语言于 2005 年进行扩展使其特征简化，并更好地支持模块化设计与系统验证。这些扩展融入一个语言标准中，这就是 SystemVerilog (IEEE STD 1800-2009)。SystemVerilog 文件名通常以 .sv 结束。</p>
+<h2 id="11-模块">1.1 模块</h2>
+<p>包括输入和输出的硬件块称为<strong>模块</strong> (module)，它定义了由输入和输出组成的接口，并且执行特定的功能。其编码内容对于调用该模块的其他模块并不重要，只要它执行自己的功能。描述模块功能的主要形式有两种：</p>
+<ul>
+<li>行为模型 (behavioral)：描述一个模块做什么</li>
+<li>结构模型 (structural)：应用层次化方法描述一个模块怎样由更简单的部件构造</li>
+</ul>
+<p>一个 SystemVerilog 模块以模块名、以及输入和输出列表开始。<code>assign</code> 语句描述组合逻辑，<code>~</code> 表示非，<code>&amp;</code> 表示与，<code>|</code> 表示或。<code>logic</code> 变量类型可以用于任何地方，除了具有多个驱动的信号外（具有多个驱动器的信号称为 <code>net</code>）。</p>
+<pre><code class="language-verilog">module sillyfunction (
+    input  logic a,b,c
+    output logic y
+);
+
+    assign y = ~a &amp; ~b &amp; ~c |
+                a &amp; ~b &amp; ~c |
+                a &amp; ~b &amp;  c;
+endmodule
+</code></pre>
+<h2 id="12-模拟和综合">1.2 模拟和综合</h2>
+<p>两种硬件描述语言的主要目的是逻辑<strong>模拟</strong> (simulation) 和<strong>综合</strong> (synthesis)。</p>
+<ul>
+<li>模拟阶段，给模块增加输入，并检查输出以便验证模块操作是否正确</li>
+<li>综合阶段，将模块的文字描述转换成逻辑门</li>
+</ul>
+<ol>
+<li><strong>模拟</strong></li>
+</ol>
+<p>硬件设计里的错误被称为漏洞 (bug)，去除数字系统中的漏洞十分重要。在系统完成后才改正错误付出的代价极度昂贵，Intel 曾经因为奔腾处理器的浮点除法漏洞花费了 4.75 亿美元，所以在系统建立前进行逻辑模拟是很必要的。下图是前面 <code>sillyfunction</code> 模块的模拟波形</p>
+<figure data-type="image" tabindex="1"><img src="https://s2.loli.net/2022/05/19/H3ACmRSYEPMbnwK.png" alt="模拟波形图" width="349" height="121" loading="lazy"></figure>
+<ol start="2">
+<li><strong>综合</strong></li>
+</ol>
+<p>逻辑综合将 HDL 代码转换成网表 (netlist)，网表描述硬件，比如逻辑门和连线。逻辑综合可以进行优化以便减少硬件的数量，比如下图中显示了由 3 个 3 输入与门简化为 2 个 2 输入与门的结果。</p>
+<figure data-type="image" tabindex="2"><img src="https://s2.loli.net/2022/05/19/25T8xvftVSwUlnO.png" alt="综合后的电路" width="287" height="155" loading="lazy"></figure>
+<p>HDL 代码可以分成<strong>可综合</strong> (synthesizable) 模块和<strong>测试程序</strong> (testbench)。可综合模块描述硬件，测试程序包含将输入应用于模块的代码，检测输出结果是否正确，并输出期望结果与实际结果的差别。测试程序代码只用于模拟，不能用于综合。</p>
+<p>HDL 有一些特定的方法来描述各种的逻辑，这些方法称为风格 (idiom)。本文将讲述如何针对每一类模块采用合适的风格编写 HDL 代码，然后如何把各块聚集起来成为一个可以工作的系统。</p>
+<h1 id="2-组合逻辑">2 组合逻辑</h1>
+<p>组合逻辑的输出只依赖当前输入，本节描述如何用 SystemVerilog 编写组合逻辑的行为模型。</p>
+<h2 id="21-位运算符">2.1 位运算符</h2>
+<p>位 (bitwise) 运算符对单位信号和多位总线进行操作，下面的 <code>inv</code> 模块描述 4 个连接到 4 位总线的反向器。其中 <code>a[3:0]</code> 代表一个 4 位的总线，这些位从最高有效位到最低有效位分别是 <code>a[3], a[2], a[1], a[0]</code>。因为这里最低有效位的位号最小，所以称为<strong>小端</strong> (little-endian) 顺序。</p>
+<pre><code class="language-verilog">module inv(
+    input  logic [3:0] a,
+    output logic [3:0] y
+);
+
+    assign y = ~a;
+endmodule
+</code></pre>
+<p>总线的<strong>字节顺序</strong> (endianness) 是任意选择的。只要保持一致，可以采用任意一种字节顺序。</p>
+<h2 id="22-注释和空白">2.2 注释和空白</h2>
+<p>SystemVerilog <strong>对空白并不敏感</strong>，包括空格、Tab 键和换行，但合理使用缩进排版和换行可以增加复杂设计的可读性。SystemVerilog 是<strong>大小写敏感</strong>的，但只通过大小写来区分不同的信号容易造成混乱。</p>
+<p>SystemVerilog 的注释与 C 的一样，有两种：</p>
+<ul>
+<li>多行注释：以 <code>/*</code> 开始，之后的内容可以延续多行，以下一个 <code>*/</code> 结束</li>
+<li>单行注释：以 <code>//</code> 开始的注释则一直延续到本行的末尾</li>
+</ul>
+<p>下面的代码中展示了一些基本的概念，其中 <code>~</code>、<code>^</code> 和 <code>|</code> 都是 Verilog <strong>运算符</strong> (operator)，<code>a</code>、<code>b</code> 和 <code>y1</code> 是<strong>运算数</strong> (operand)。运算符和运算数的组合，如 <code>a&amp;b</code>，称为<strong>表达式</strong> (expression)。一条完整的命令，如 <code>assign y4 = ~(a&amp;b);</code> 称为<strong>语句</strong> (statement)。</p>
+<pre><code class="language-verilog">module gates(
+    input  logic [3:0] a, b,
+    output logic [3:0] y1, y2,
+                       y3, y4, y5
+);
+    /* five different tow-input logic 
+       gates acting on 4-bit busses
+    */
+    assign y1 = a &amp; b;      // AND
+    assign y2 = a | b;      // OR
+    assign y3 = a ^ b;      // XOR
+    assign y4 = ~(a&amp;b);     // NAND
+    assign y5 = ~(a|b);     // NOR
+endmodule
+</code></pre>
+<p><code>assign out = in1 op in2;</code> 称为<strong>连续赋值语句</strong> (continuous assignment statement)，连续赋值语句以一个分号结束。在连续赋值语句中，等号右边的输入值改变，等号左边的输出就会随之重新计算。因此，连续赋值语句描述组合逻辑。</p>
+<h2 id="23-缩位运算符">2.3 缩位运算符</h2>
+<p><strong>缩位运算符</strong>表示作用在一条总线上的多输入门。下面的代码描述了一个 8 输入与门，或门、异或门和与非门等也有类似的缩位运算符。</p>
+<pre><code class="language-verilog">module and8 (
+    input  logic [7:0] a,
+    output logic       y
+);
+    
+    // same as assign y = a[7] &amp; a[6] &amp; a[5] &amp; a[4] &amp;
+    //                    a[3] &amp; a[2] &amp; a[1] &amp; a[0];
+    assign y = &amp;a;
+endmodule
+</code></pre>
+<h2 id="24-条件赋值">2.4 条件赋值</h2>
+<p><strong>条件赋值</strong> (conditional assignment) 根据称为条件的输入在所有可选项中选择一个输出。下面的代码说明了一个使用条件赋值的 2:1 复用器。<strong>条件运算符</strong> <code>?:</code> 基于第一个表达式，在第二个表达式和第三个表达式之间选择。<code>?:</code> 对于描述复用器特别有用。</p>
+<pre><code class="language-verilog">module mux2 (
+    input  logic [3:0] d0, d1,
+    input  logic       s,
+    output logic [3:0] y
+);
+    
+    assign y = s ? d1 : d0;
+endmodule
+</code></pre>
+<h2 id="25-内部变量">2.5 内部变量</h2>
+<p>通常，把一个复杂功能分为几个中间过程来完成会更方便。全加器是一个有 3 个输入和 2 个输出的电路，它由以下等式定义：</p>
+<p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mtable><mtr><mtd><mstyle scriptlevel="0" displaystyle="true"><mi>S</mi></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mo>=</mo><mi>A</mi><mo>⊕</mo><mi>B</mi><mo>⊕</mo><msub><mi>C</mi><mtext>in </mtext></msub></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="true"><msub><mi>C</mi><mtext>out </mtext></msub></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mo>=</mo><mi>A</mi><mi>B</mi><mo>+</mo><mi>A</mi><msub><mi>C</mi><mtext>in </mtext></msub><mo>+</mo><mi>B</mi><msub><mi>C</mi><mtext>in </mtext></msub></mrow></mstyle></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{aligned}
+S &amp;=A \oplus B \oplus C_{\text {in }} \\
+C_{\text {out }} &amp;=A B+A C_{\text {in }}+B C_{\text {in }}
+\end{aligned}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:3.0000000000000004em;vertical-align:-1.2500000000000002em;"></span><span class="mord"><span class="mtable"><span class="col-align-r"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.7500000000000002em;"><span style="top:-3.91em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.05764em;">S</span></span></span><span style="top:-2.41em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathdefault" style="margin-right:0.07153em;">C</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:-0.07153em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">out </span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.2500000000000002em;"><span></span></span></span></span></span><span class="col-align-l"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.7500000000000002em;"><span style="top:-3.91em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord mathdefault">A</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">⊕</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mord mathdefault" style="margin-right:0.05017em;">B</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">⊕</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07153em;">C</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31750199999999995em;"><span style="top:-2.5500000000000003em;margin-left:-0.07153em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">in </span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span><span style="top:-2.41em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord mathdefault">A</span><span class="mord mathdefault" style="margin-right:0.05017em;">B</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mord mathdefault">A</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07153em;">C</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31750199999999995em;"><span style="top:-2.5500000000000003em;margin-left:-0.07153em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">in </span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mord mathdefault" style="margin-right:0.05017em;">B</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07153em;">C</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31750199999999995em;"><span style="top:-2.5500000000000003em;margin-left:-0.07153em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">in </span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.2500000000000002em;"><span></span></span></span></span></span></span></span></span></span></span></span></p>
+<p>如果我们定义中间信号 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>P</mi></mrow><annotation encoding="application/x-tex">P</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">P</span></span></span></span> 和 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>G</mi></mrow><annotation encoding="application/x-tex">G</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault">G</span></span></span></span>，</p>
+<p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mtable><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi>P</mi><mo>=</mo><mi>A</mi><mo>⊕</mo><mi>B</mi></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi>G</mi><mo>=</mo><mi>A</mi><mi>B</mi></mrow></mstyle></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{array}{l}
+P=A \oplus B \\
+G=A B
+\end{array}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:2.4000000000000004em;vertical-align:-0.9500000000000004em;"></span><span class="mord"><span class="mtable"><span class="arraycolsep" style="width:0.5em;"></span><span class="col-align-l"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.45em;"><span style="top:-3.61em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord mathdefault">A</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">⊕</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mord mathdefault" style="margin-right:0.05017em;">B</span></span></span><span style="top:-2.4099999999999997em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathdefault">G</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord mathdefault">A</span><span class="mord mathdefault" style="margin-right:0.05017em;">B</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.9500000000000004em;"><span></span></span></span></span></span><span class="arraycolsep" style="width:0.5em;"></span></span></span></span></span></span></span></p>
+<p>则可以重写全加器：</p>
+<p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mtable><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi>S</mi><mo>=</mo><mi>P</mi><mo>⊕</mo><msub><mi>C</mi><mtext>in </mtext></msub></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><msub><mi>C</mi><mtext>out </mtext></msub><mo>=</mo><mi>G</mi><mo>+</mo><mi>P</mi><msub><mi>C</mi><mtext>in </mtext></msub></mrow></mstyle></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{array}{l}
+S=P \oplus C_{\text {in }} \\
+C_{\text {out }}=G+P C_{\text {in }}
+\end{array}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:2.4000000000000004em;vertical-align:-0.9500000000000004em;"></span><span class="mord"><span class="mtable"><span class="arraycolsep" style="width:0.5em;"></span><span class="col-align-l"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.45em;"><span style="top:-3.61em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.05764em;">S</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">⊕</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07153em;">C</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31750199999999995em;"><span style="top:-2.5500000000000003em;margin-left:-0.07153em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">in </span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span><span style="top:-2.4099999999999997em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathdefault" style="margin-right:0.07153em;">C</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:-0.07153em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">out </span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord mathdefault">G</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07153em;">C</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31750199999999995em;"><span style="top:-2.5500000000000003em;margin-left:-0.07153em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">in </span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.9500000000000004em;"><span></span></span></span></span></span><span class="arraycolsep" style="width:0.5em;"></span></span></span></span></span></span></span></p>
+<p><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>P</mi></mrow><annotation encoding="application/x-tex">P</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">P</span></span></span></span> 和 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>G</mi></mrow><annotation encoding="application/x-tex">G</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault">G</span></span></span></span> 称为内部变量 (internal variable)，它们既不是输入也不是输出，只在模块内部使用。Verilog 赋值语句 <code>assign</code> 是并行执行的，在 HDL 中这些并行语句的顺序并不重要。</p>
+<pre><code class="language-verilog">module fulladder (
+    input  logic a, b, cin,
+    output logic s, cout
+);
+    
+    logic p, g;
+    assign p = a ^ b;
+    assign g = a &amp; b;
+
+    assign s = p ^ cin;
+    assign cout = g | (p &amp; cin);
+endmodule
+</code></pre>
+<h2 id="26-优先级">2.6 优先级</h2>
+<p>上面的代码中为 <code>cout</code> 的计算添加了括号，以便把运算顺序定义为 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>C</mi><mtext>out</mtext></msub><mo>=</mo><mi>G</mi><mo>+</mo><mo>(</mo><mi>P</mi><mo>⋅</mo><msub><mi>C</mi><mtext>in</mtext></msub><mo>)</mo></mrow><annotation encoding="application/x-tex">C_{\text{out}} = G + (P \cdot C_{\text{in}})</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07153em;">C</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:-0.07153em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">out</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.76666em;vertical-align:-0.08333em;"></span><span class="mord mathdefault">G</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07153em;">C</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31750199999999995em;"><span style="top:-2.5500000000000003em;margin-left:-0.07153em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">in</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span>。如果没有使用括号，就采用语言定义的默认运算顺序。下图是 Verilog 运算符的优先级。</p>
+<figure data-type="image" tabindex="3"><img src="https://s2.loli.net/2022/05/22/HyNzesKj9LF8CV7.png" alt="Verilog 运算符的优先级" width="434" height="368" loading="lazy"></figure>
+<h2 id="27-数字">2.7 数字</h2>
+<p>数字可以采用二进制、八进制、十进制或者十六进制来表示。可以指定数字的位数，数字中间出现的下划线会被忽略，但是可以增强可读性。SystemVerilog 声明常量的格式是 <code>N'Bvalue</code>，其中 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>N</mi></mrow><annotation encoding="application/x-tex">N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span></span></span></span> 是位数，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>B</mi></mrow><annotation encoding="application/x-tex">B</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.05017em;">B</span></span></span></span> 是说明基数的字母，value 是值。<code>'b</code> 表示二进制，<code>'o</code> 表示八进制，<code>'d</code> 表示十进制，<code>'h</code> 表示十六进制。</p>
+<p>如果没有提供基数，那么基数默认为 10。如果没有给出位数，那么数字就赋予当前表达式的位数，0 会自动填补在数字的前面以达到满位。比如 <code>w</code> 是 6 位总线，<code>assign w = 'b11</code> 会给 <code>w</code> 赋予 000011。明确地说明位数大小是比较好的。但是有个例外，<code>'0</code> 和 <code>'1</code> 分别是将全 0 和全 1 赋值给一条总线的 SystemVerilog 惯用语法。</p>
+<figure data-type="image" tabindex="4"><img src="https://s2.loli.net/2022/05/22/DMfTbVo9NQ8L52k.png" alt="SystemVerilog 数字" width="404" height="304" loading="lazy"></figure>
+<h2 id="28-z-和-x">2.8 Z 和 X</h2>
+<p>SystemVerilog 用 <strong>z</strong> 表示<strong>浮空值</strong>，对于描述三态缓存器尤其有用——当使能位为 0 时，它的输出为浮空。总线可以由多个三态缓存器驱动，但其中最多只有一个使能。如果缓存器被使能，输入和输出一致；如果缓存器被禁用，输出就为浮空值 (z)。</p>
+<p>下面的代码展示了一个三态缓存器的风格。其中 <code>y</code> 声明为 <code>tri</code> 变量类型而不是 <code>logic</code> 变量类型。<code>logic</code> 信号只能有一个信号源驱动信号。三态总线可以有多个驱动信号，所以三态总线应声明为 <code>net</code> 变量。SystemVerilog 中 <code>net</code> 变量有 <code>tri</code> 和 <code>trireg</code> 两种类型。一般来说，每次只有一个驱动信号源处于激活状态，<code>net</code> 采纳该信号源的数值作为其信号数值。如果没有一个驱动信号源处于激活状态，则 <code>tri</code> 类型信号将处于悬空状态 (z)，而 <code>trireg</code> 类型信号则保持先前的数值。如果输入或输出变量没有指定变量类型，则默认为 <code>tri</code> 类型。</p>
+<pre><code class="language-verilog">module tristate (
+    input  logic [3:0] a,
+    input  logic       en,
+    output tri   [3:0] y
+);
+    assign y = en ? a : 4'bz;
+endmodule
+</code></pre>
+<p>SystemVerilog 使用 <strong>x</strong> 表示一个<strong>无效的逻辑电平</strong>。如果一条总线被两个使能的三态缓冲器同时驱动为 0 和 1，则结果是 X，说明发生了冲突。在模拟开始时，状态结点（如触发器输出）被初始化一个未知状态，这有助于追踪在使用输出前忘记复位触发器而引起的错误。如果一个门接收一个浮空输入，当它不能确定正确的输出值时，它将产生一个输出 x。如果它接收一个无效的或者未初始化的输入，它也会输出一个 x。</p>
+<p>在模拟时看到的 x 或 z 值，基本已经说明出现了漏洞或不正确的编码。</p>
+<h2 id="29-位混合">2.9 位混合</h2>
+<p>常常需要在总线的子集上操作，或者连接信号来构成总线。这些操作称为<strong>位混合</strong> (bit swizzling)。下面的例子中使用 <code>{}</code> 操作符连接总线，用位混合操作给 <code>y</code> 赋予 9 位值 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>c</mi><mn>2</mn></msub><msub><mi>c</mi><mn>1</mn></msub><msub><mi>d</mi><mn>0</mn></msub><msub><mi>d</mi><mn>0</mn></msub><msub><mi>d</mi><mn>0</mn></msub><msub><mi>c</mi><mn>0</mn></msub><mn>101</mn></mrow><annotation encoding="application/x-tex">c_{2} c_{1} d_{0} d_{0} d_{0} c_{0} 101</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.84444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault">c</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathdefault">c</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathdefault">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">0</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathdefault">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">0</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathdefault">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">0</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathdefault">c</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">0</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord">1</span><span class="mord">0</span><span class="mord">1</span></span></span></span>。<br>
+其中 <code>{3{d[0]}}</code> 表示 <code>d[0]</code> 的 3 个拷贝。</p>
+<pre><code class="language-verilog">assign y = {c[2:1], {3{d[0]}}, c[0], 3'b101};
+</code></pre>
+<h2 id="210-延迟">2.10 延迟</h2>
+<p>HDL 的语句可以与任意单位的延迟相关联，这对于在<strong>模拟</strong>预测电路工作速度和调试需要知道原因和后果时很有用。在综合时这些延迟被忽略，综合器产生的门延迟是由 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>t</mi><mtext>pd</mtext></msub></mrow><annotation encoding="application/x-tex">t_{\text{pd}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9011879999999999em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathdefault">t</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361079999999999em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">pd</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span></span></span></span> 和 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>t</mi><mtext>cd</mtext></msub></mrow><annotation encoding="application/x-tex">t_{\text{cd}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.76508em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault">t</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">cd</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> 决定的，而不是 HDL 代码中的数字。</p>
+<pre><code class="language-verilog">`timescale 1ns/1ps
+
+module example (
+    input  logic a, b, c,
+    output logic y
+);
+
+logic ab, bb, cb, n1, n2, n3;
+
+assign #1 {ab, bb, cb} = ~{a, b, c};
+assign #2 n1 = ab &amp; bb &amp; cb;
+assign #2 n2 = a &amp; bb &amp; cb;
+assign #2 n3 = a &amp; bb &amp; c;
+assign #4 y = n1 | n2 | n3;
+endmodule
+</code></pre>
+<p>SystemVerilog 文件可以包括说明每一个时间单位值的时间尺度指令，格式为 <code>`timescale unit/precision</code>，该语句表明每个时间单位为 1ns，模拟精度为 1ps。如果文件中没有给出时间尺度指令，将使用默认的单位和精度（一般两者都是 1ns）。在 SystemVerilog 中，<code>#</code> 符号用于说明延迟单位的数量，它可以放在 <code>assign</code> 语句中。</p>
+<h1 id="3-结构化建模">3 结构化建模</h1>
+<p>上一节讨论行为建模，它通过对输入和输出之间关系建立模型。本节介绍结构建模，它描述一个模块怎样由更简单的模块组成。</p>
+<p>下面的例子说明怎样将 3 个 2:1 复用器组合成一个 4:1 复用器。2:1 复用器的每个拷贝称为一个<strong>实例</strong> (instance)，同一个模块的多个实例由不同的名字区分。</p>
+<pre><code class="language-verilog">module mux4 (
+    input  logic [3:0] d0, d1, d2, d3,
+    input  logic [1:0] s,
+    output logic [3:0] y
+);
+
+    logic [3:0] low, high;
+
+    mux2 lowmux(d0, d1, s[0], low);
+    mux2 highmux(d2, d3, s[0], high);
+    mux2 finalmux(low, high, s[1], y);
+endmodule
+</code></pre>
+<figure data-type="image" tabindex="5"><img src="https://s2.loli.net/2022/05/20/COwSIjqs4klDgBE.png" alt="mux4 综合后电路" width="670" height="286" loading="lazy"></figure>
+<p>一般来说，复杂系统都是<strong>分层</strong>定义的。通过实例化主要的组件的方式来结构化地描述整个系统。每一个组件由更小的模块结构化地构成，然后进一步分解直到组件足够简单可以描述行为。避免在一个单独模块中混合使用结构和行为描述是一种好的程序设计风格。</p>
+<h1 id="4-时序逻辑">4 时序逻辑</h1>
+<p>HDL 综合器可以识别某种风格，然后把它们转换成特定的时序电路。其他的编码风格可以正确地模拟，但把出现明显或不明显的错误综合到电路中。本节介绍寄存器和锁存器的正确描述风格。</p>
+<h2 id="41-寄存器">4.1 寄存器</h2>
+<p>大多数现代的商业系统都由寄存器构成，这些寄存器使用正边沿触发的 D 触发器。下面的例子给出了这种触发器的风格。在 SystemVerilog 的 <code>always</code> 语句中，信号保持它们原来的值直到敏感信号列表中的一个事件发生，该事件明显地引起它们改变。因此，具有合适敏感信号列表的代码，可以用于描述有记忆能力的时序电路。例如，触发器在敏感信号列表中只有 <code>clk</code>，说明在下一个 <code>clk</code> 的上升沿到来前 <code>q</code> 都保持原来的值。</p>
+<pre><code class="language-verilog">module flop (
+    input  logic       clk,
+    input  logic [3:0] d,
+    output logic [3:0] q
+);
+    
+    always_ff @(posedge clk)
+        q &lt;= d;
+endmodule
+</code></pre>
+<p>一般来说，SystemVerilog 的 <code>always</code> 语句写成如下的形式：</p>
+<pre><code class="language-verilog">always @(sensitivity list)
+    statement;
+</code></pre>
+<p>只有当敏感信号列表 (<code>sensitivity list</code>) 中说明的事件发生时才执行 <code>statement</code>。在上面的例子中，语句是 <code>q &lt;= d</code>，读作 “q 得到 d”。<code>&lt;=</code> 称为<strong>非阻塞赋值</strong>，在后续 5.4 节中会详细介绍，目前可以看作一个普通的等号。在 <code>always</code> 语句中，<code>&lt;=</code> 代替了 <code>assign</code>。</p>
+<p><code>always</code> 语句可以用来表示触发器、锁存器或组合逻辑，取决于敏感信号列表和执行语句。正因为这样的灵活性，所以容易在不经意间制造出错误的硬件电路。SystemVerilog 引入 <code>always_ff</code>、<code>always_latch</code> 和 <code>always_comb</code> 来降低产生这些常见错误的风险。<code>always_ff</code> 的行为与 <code>always</code> 一样，但只用来表示触发器，如果用于表示其他器件时允许工具生成警告信息⚠️。</p>
+<h2 id="42-复位寄存器">4.2 复位寄存器</h2>
+<p>当模拟开始或电路首次通电时，触发器或寄存器的输出是未知的，SystemVerilog 使用 x 来表示。一般来说，应该使用复位寄存器，这样在上电时可以把系统置于已知状态。复位可以是同步的也可以是异步的，异步复位马上就生效，而同步复位只能在时钟的下一个上沿时才能清除输出。</p>
+<p>下面的例子说明了同步复位和异步复位触发器的风格。在 <code>always</code> 语句敏感信号列表中的多个信号用逗号或者 <code>or</code> 分隔。<code>posedge reset</code> 在异步复位触发器的敏感信号列表中，但不在同步复位触发器中。因此，异步复位触发器会马上响应 <code>reset</code> 的上升沿，但同步复位触发器只在时钟的上沿时响应 <code>reset</code>。</p>
+<pre><code class="language-verilog">module flopr (
+    input  logic       clk,
+    input  logic       reset,
+    input  logic [3:0] d,
+    output logic [3:0] q
+);
+    // asynchronous reset
+    always_ff @(posedge clk, posedge reset)
+        if (reset) q &lt;= 4'b0;
+        else       q &lt;= d;
+endmodule
+
+module flopr (
+    input  logic       clk,
+    input  logic       reset,
+    input  logic [3:0] d,
+    output logic [3:0] q
+);
+    // synchronous reset
+    always_ff @(posedge clk)
+        if (reset) q &lt;= 4'b0;
+        else       q &lt;= d;
+endmodule
+</code></pre>
+<h2 id="43-多寄存器">4.3 多寄存器</h2>
+<p>一条单独的 <code>always</code> 语句可以用于描述多个硬件，比如由两个背靠背连接的触发器组成的同步器。下面的例子描述了同步器，在 <code>clk</code> 的上升沿，<code>d</code> 复制到 <code>n1</code>，同时 <code>n1</code> 复制到 <code>q</code>。其中 <code>begin/end</code> 结构是必要的，因为有多条声明语句出现在 <code>always</code> 语句中，这与 C 语言中的 <code>{ }</code>相似。</p>
+<figure data-type="image" tabindex="6"><img src="https://s2.loli.net/2022/05/22/UQw4FuoL81sEjxz.png" alt="同步器电路" width="248" height="122" loading="lazy"></figure>
+<pre><code class="language-verilog">module sync (
+    input  logic clk,
+    input  logic d,
+    output logic q
+);
+
+    logic n1;
+
+    always_ff @(posedge clk) 
+        begin
+            n1 &lt;= d;    // nonblocking
+            q &lt;= n1;    // nonblocking
+        end
+endmodule
+</code></pre>
+<h2 id="44-锁存器">4.4 锁存器</h2>
+<p>当时钟为 HIGH 时，D 锁存器是透明的，允许数据从输入流向输出。当时钟为 LOW 时锁存器变为不透明的，保持原来的状态。不是所有的综合工具都能很好地支持锁存器，最好不使用锁存器而使用边沿触发器。</p>
+<p>下面的例子展示了 D 锁存器的风格。<code>always_latch</code> 等同于 <code>always@ (clk, d)</code>，它是 SystemVerilog 中用来描述锁存器的首选风格。如果 <code>clk</code> 为 HIGH，则 <code>d</code> 的值传递给 <code>q</code>。否则 <code>q</code> 保持它原来的值。</p>
+<pre><code class="language-verilog">module latch (
+    input  logic       clk,
+    input  logic [3:0] d,
+    output logic [3:0] q
+);
+
+    always_latch
+        if (clk) q &lt;= d;    
+endmodule
+</code></pre>
+<h1 id="5-更多组合逻辑">5 更多组合逻辑</h1>
+<p>第二节使用赋值语句从行为上描述组合逻辑，第四节使用 <code>always</code> 语句描述时序电路。然而，<code>always</code> 语句也可以用于描述组合逻辑的行为，如果敏感信号列表包含对所有输入的响应，正文描述每一种可能输入组合的输出值。</p>
+<p>下面的例子使用 <code>always</code> 语句描述了 4 个一组的反相器。当 <code>always</code> 语句中的 <code>&lt;=</code> 或 <code>=</code> 右边的信号发生改变时，<code>always_comb</code> 就重新运算 <code>always</code> 声明语句中的代码。<code>always_comb</code> 与 <code>always</code> 基本相同，但它避免了后者由于信号改名或添加信号所带来的错误。</p>
+<pre><code class="language-verilog">module inv (
+    input  logic [3:0] a,
+    output logic [3:0] y
+);
+
+    always_comb
+        y = ~a;
+endmodule
+</code></pre>
+<p><code>=</code> 在 <code>always</code> 语句中称为<strong>阻塞赋值 <strong>(blocking assignment)，与之相对的 <code>&lt;=</code> 称为</strong>非阻塞赋值</strong> (non-blocking assignment)。一组阻塞赋值语句将以其在代码中出现的顺序来计算，一组非阻塞赋值语句则并行地计算。在 SystemVerilog 中，组合逻辑适合使用阻塞赋值，而在时序逻辑中需要使用非阻塞赋值。不要把使用 <code>assign</code> 语句的连续赋值与这两语句混淆，<code>assign</code> 语句必须放在 <code>always</code> 语句的外面，而且是并发计算。</p>
+<h2 id="51-case-语句">5.1 case 语句</h2>
+<p>使用 <code>always</code> 语句实现组合逻辑的一个较好应用是利用 <code>case</code> 语句实现七段显示译码器，<code>case</code> 语句必须出现在 <code>always</code> 语句的内部，它基于输入值执行不同的动作，如果所有可能的输入组合都被定义，则 <code>case</code> 语句表示组合逻辑；否则，它就表示时序逻辑，因为输出会保持为未定义情况下的原来值。</p>
+<p>下面的例子使用 <code>case</code> 语句描述七段显示译码器。<code>default</code> 子句是一种非常方便的方法，用于定义没有明确列出的所有情况下的输出，这样可以保证产生组合逻辑。</p>
+<pre><code class="language-verilog">module sevenseg (
+    input  logic [3:0] data,
+    output logic [6:0] segments
+);
+    always_comb
+        case(data)
+            //                   abc_defg
+            0:       segments=7'b111_1110;
+            1:       segments=7'b011_0000;
+            2:       segments=7'b110_1101;
+            3:       segments=7'b111_1001;
+            4:       segments=7'b011_0011;
+            5:       segments=7'b101_1011;
+            6:       segments=7'b101_1111;
+            7:       segments=7'b111_0000;
+            8:       segments=7'b111_1111;
+            9:       segments=7'b111_0011;
+            default: segments=7'b000_0000;
+        endcase
+endmodule
+</code></pre>
+<h2 id="52-if-语句">5.2 if 语句</h2>
+<p><code>always</code> 语句中可以包含 <code>if</code> 语句，<code>if</code> 语句后面还可以出现 <code>else</code> 语句。<code>if</code> 语句必须出现在 <code>always</code> 语句的内部。如果所有可能的输入组合都处理了，则这条语句就表示组合逻辑；否则，就产生时序逻辑。下面的例子描述了优先级电路，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>N</mi></mrow><annotation encoding="application/x-tex">N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span></span></span></span> 输入优先电路将对应的最高有效输入为 TRUE 的位设置为输出 TRUE。</p>
+<pre><code class="language-verilog">module priorityckt (
+    input  logic [3:0] a,
+    output logic [3:0] y
+);
+    always_comb
+        if      (a[3]) y&lt;=4'b1000;
+        else if (a[2]) y&lt;=4'b0100;
+        else if (a[1]) y&lt;=4'b0010;
+        else if (a[0]) y&lt;=4'b0001;
+        else           y&lt;=4'b0000;
+endmodule
+</code></pre>
+<h2 id="53-带有无关项的真值表">5.3 带有无关项的真值表</h2>
+<p>真值表中可能包含无关项从而提供更多逻辑简化可能。下面的例子展示了如何利用无关项描述优先级电路。其中 <code>casez</code> 语句的作用与 <code>case</code> 语句一样，但它能识别作为无关项的 <code>?</code>。</p>
+<pre><code class="language-verilog">module priority_casez (
+    input  logic [3:0] a,
+    output logic [3:0] y
+);
+    always_comb
+        casez(a)
+            4'b1???: y&lt;=4'b1000;
+            4'b01??: y&lt;=4'b0100;
+            4'b001?: y&lt;=4'b0010;
+            4'b0001: y&lt;=4'b0001;
+            default: y&lt;=4'b0000;
+        endcase
+endmodule
+</code></pre>
+<h2 id="54-阻塞赋值和非阻塞赋值">5.4 阻塞赋值和非阻塞赋值</h2>
+<p>下面将解释什么时候和怎样使用不同赋值类型的准则，如果不遵照这些准则，编写的代码就可能在模拟时正确，但综合到不正确的硬件。</p>
+<ul>
+<li>使用 <code>always_ff@ (posedge clk)</code> 和非阻塞赋值描述同步时序逻辑</li>
+</ul>
+<pre><code class="language-verilog">always_ff@ (posedge clk)
+    begin
+        n1 &lt;= d;    // nonblocking
+        q &lt;= n1;    // nonblocking
+    end
+</code></pre>
+<ul>
+<li>使用连续赋值描述简单组合逻辑</li>
+</ul>
+<pre><code class="language-verilog">assign y=s ? d1 : d0;
+</code></pre>
+<ul>
+<li>使用 <code>always_comb</code> 和阻塞赋值描述复杂组合逻辑将会很有帮助</li>
+</ul>
+<pre><code class="language-verilog">always_comb
+    begin
+        p = a ^ b;
+        g = a &amp; b;
+        s = p ^ cin;
+        cout = g | (p &amp; cin);
+    end
+</code></pre>
+<ul>
+<li>不要在多于 1 个 <code>always</code> 语句或者连续赋值语句中对同一个信号赋值</li>
+</ul>
+<ol>
+<li><strong>组合逻辑</strong></li>
+</ol>
+<p>在 2.5 节使用了阻塞赋值正确地对全加器进行了建模，现在来探讨它如何操作以及如果使用非阻塞赋值有什么不同。假设a、b、cin 都初始化为 0，因此 p、g、s 和 cout 也是 0。在某一时刻，a 改变为 1，触发 <code>always</code> 语句。4 个阻塞赋值按顺序计算，p 和 g 是阻塞赋值，在计算 s 和 cout 前得到新值。</p>
+<p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>1</mn><mo>)</mo><mtext> </mtext><mi mathvariant="normal">p</mi><mo>←</mo><mn>1</mn><mo>⊕</mo><mn>0</mn><mo>=</mo><mn>1</mn><mspace linebreak="newline"></mspace><mn>2</mn><mo>)</mo><mtext> </mtext><mi mathvariant="normal">g</mi><mo>←</mo><mn>1</mn><mo>⋅</mo><mn>0</mn><mo>=</mo><mn>0</mn><mspace linebreak="newline"></mspace><mn>3</mn><mo>)</mo><mtext> </mtext><mi mathvariant="normal">s</mi><mo>←</mo><mn>1</mn><mo>⊕</mo><mn>0</mn><mo>=</mo><mn>1</mn><mspace linebreak="newline"></mspace><mn>4</mn><mo>)</mo><mtext> </mtext><mrow><mi mathvariant="normal">c</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">u</mi><mi mathvariant="normal">t</mi></mrow><mo>←</mo><mn>0</mn><mo>+</mo><mn>1</mn><mo>⋅</mo><mn>0</mn><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">1) \ \mathrm{p} \leftarrow 1 \oplus 0 = 1\\
+2) \  \mathrm{g} \leftarrow 1 \cdot 0=0 \\
+3) \  \mathrm{s} \leftarrow 1 \oplus 0=1 \\
+4) \ \mathrm{cout}  \leftarrow 0+1 \cdot 0=0 
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose">)</span><span class="mspace"> </span><span class="mord"><span class="mord mathrm">p</span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">←</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">⊕</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">0</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span></span><span class="mspace newline"></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">2</span><span class="mclose">)</span><span class="mspace"> </span><span class="mord"><span class="mord mathrm" style="margin-right:0.01389em;">g</span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">←</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">0</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">0</span></span><span class="mspace newline"></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">3</span><span class="mclose">)</span><span class="mspace"> </span><span class="mord"><span class="mord mathrm">s</span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">←</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">⊕</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">0</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span></span><span class="mspace newline"></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">4</span><span class="mclose">)</span><span class="mspace"> </span><span class="mord"><span class="mord mathrm">c</span><span class="mord mathrm">o</span><span class="mord mathrm">u</span><span class="mord mathrm">t</span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">←</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">0</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">0</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">0</span></span></span></span></span></p>
+<p>下面的例子说明了非阻塞赋值的使用。考虑 a 从 0 上升为 1，而 b 和 cin 都为 0 的情况。4 个非阻塞赋值并发地计算。</p>
+<p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">p</mi><mo>←</mo><mn>1</mn><mo>⊕</mo><mn>0</mn><mo>=</mo><mn>1</mn><mspace width="1em"/><mrow><mtext> </mtext><mi mathvariant="normal">g</mi></mrow><mo>←</mo><mn>1</mn><mo>⋅</mo><mn>0</mn><mo>=</mo><mn>0</mn><mspace width="1em"/><mrow><mtext> </mtext><mi mathvariant="normal">s</mi></mrow><mo>←</mo><mn>0</mn><mo>⊕</mo><mn>0</mn><mo>=</mo><mn>0</mn><mspace width="1em"/><mtext> cout </mtext><mo>←</mo><mn>0</mn><mo>+</mo><mn>0</mn><mo>⋅</mo><mn>0</mn><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\mathrm{p} \leftarrow 1 \oplus 0=1 \quad \mathrm{~g} \leftarrow 1 \cdot 0=0 \quad \mathrm{~s} \leftarrow 0 \oplus 0=0 \quad \text { cout }  \leftarrow 0+0 \cdot 0=0
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathrm">p</span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">←</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">⊕</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">0</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8388800000000001em;vertical-align:-0.19444em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:1em;"></span><span class="mord"><span class="mspace nobreak"> </span><span class="mord mathrm" style="margin-right:0.01389em;">g</span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">←</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">0</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">0</span><span class="mspace" style="margin-right:1em;"></span><span class="mord"><span class="mspace nobreak"> </span><span class="mord mathrm">s</span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">←</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">0</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">⊕</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">0</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">0</span><span class="mspace" style="margin-right:1em;"></span><span class="mord text"><span class="mord"> cout </span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">←</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">0</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">0</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">0</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">0</span></span></span></span></span></p>
+<p>注意 s 与 p 并发计算，因此使用 p 的原来值，而不是新值，所以 s 保持 0 而不是 1。然而，p 从 0 改变为 1，这个改变触发 <code>always</code> 语句，进行第二次计算，过程如下：</p>
+<p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">p</mi><mo>←</mo><mn>1</mn><mo>⊕</mo><mn>1</mn><mo>=</mo><mn>1</mn><mspace width="1em"/><mrow><mtext> </mtext><mi mathvariant="normal">g</mi></mrow><mo>←</mo><mn>1</mn><mo>⋅</mo><mn>0</mn><mo>=</mo><mn>0</mn><mspace width="1em"/><mrow><mtext> </mtext><mi mathvariant="normal">s</mi></mrow><mo>←</mo><mn>1</mn><mo>⊕</mo><mn>0</mn><mo>=</mo><mn>1</mn><mspace width="1em"/><mtext> cout </mtext><mo>←</mo><mn>0</mn><mo>+</mo><mn>1</mn><mo>⋅</mo><mn>0</mn><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\mathrm{p} \leftarrow 1 \oplus 1=1 \quad \mathrm{~g} \leftarrow 1 \cdot 0=0 \quad \mathrm{~s} \leftarrow 1 \oplus 0=1 \quad \text { cout } \leftarrow 0+1 \cdot 0=0
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathrm">p</span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">←</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">⊕</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8388800000000001em;vertical-align:-0.19444em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:1em;"></span><span class="mord"><span class="mspace nobreak"> </span><span class="mord mathrm" style="margin-right:0.01389em;">g</span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">←</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">0</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">0</span><span class="mspace" style="margin-right:1em;"></span><span class="mord"><span class="mspace nobreak"> </span><span class="mord mathrm">s</span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">←</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">⊕</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">0</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:1em;"></span><span class="mord text"><span class="mord"> cout </span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">←</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">0</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">0</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">0</span></span></span></span></span></p>
+<p>这次 p 已经是 1，所以 s 正确地改变为 1。非阻塞赋值最后达到正确值，但是 <code>always</code> 语句必须计算两次，这使得仿真变慢。在对组合逻辑建模时，使用非阻塞赋值的另一个<strong>缺点</strong>是，如果忘记把中间变量包括在敏感信号列表中，那么 HDL 会产生错误的结果。</p>
+<pre><code class="language-verilog">// nonblocking assignments (not recommended)
+module fulladder (
+    input  logic a, b, cin,
+    output logic s, cout
+);
+    logic p, g;
+
+    always_comb
+        begin
+            p &lt;= a ^ b;
+            g &lt;= a &amp; b;
+
+            s &lt;= p ^ cin;
+            cout &lt;= g | (p &amp; cin);
+        end  
+endmodule
+</code></pre>
+<ol start="2">
+<li><strong>时序逻辑</strong></li>
+</ol>
+<p>使用非阻塞式赋值可以正确地描述 4.3 节中的同步器。下面的例子尝试用阻塞赋值来描述同一个模块。假设初始化 d=0，n1=1，q=0。在 clk 的上升沿，d 复制到 n1。之后 n1 的这个新值复制到 q，导致 n1 和 q 中出现不正确的 d。在时钟沿后赋值依次进行，q = n1 = 0。</p>
+<pre><code class="language-verilog">// Bad implementation of a synchronizer using blocking assignments
+module syncbad (
+    input  logic clk,
+    input  logic d,
+    output logic q
+);
+    logic n1;
+
+    always_ff @(posedge clk) 
+    begin
+        n1 = d; // blocking
+        q = n1; // blocking
+    end
+endmodule
+</code></pre>
+<p>在对时序逻辑建模时，在 <code>always</code> 语句中必须使用非阻塞赋值。阻塞赋值并没有优势，反而带来了未知行为的风险。有些时序电路无法使用阻塞赋值，无论顺序是什么。</p>
+<h1 id="6-有限状态机">6 有限状态机</h1>
+<p>有限状态机 (FSM) 由状态寄存器和两个组合逻辑块组成，用于计算当前状态和输入下的下一个状态和输出。状态机的 HDL 描述相应地划分成 3 部分来对状态寄存器、下一个状态逻辑和输出逻辑建模。</p>
+<p>下面的例子描述了 3 分频计数器有限状态机，它提供异步复位来初始化有限状态机，状态寄存器使用触发器的普通风格，下一个状态和输出逻辑块是组合逻辑。</p>
+<pre><code class="language-verilog">module divide3FSM (
+    input  logic clk,
+    input  logic reset,
+    output logic y
+);
+    typedef enum logic [1:0] {S0, S1, S2} statetype;
+    statetype [1:0] state, next_state;
+    
+    // state register
+    always_ff@(posedge clk, posedge reset)
+        if (reset) state &lt;= S0;
+        else       state &lt;= next_state;
+    
+    // next state register
+    always_comb
+        case (state)
+            S0:      next_state &lt;= S1;
+            S1:      next_state &lt;= S2;
+            S2:      next_state &lt;= S0;
+            default: next_state &lt;= S0;
+        endcase
+    
+    // output logic
+    assign y = (state == S0);
+endmodule
+</code></pre>
+<p><code>typedef</code> 语句定义了 <code>statetype</code> 为一个 2 位的 <code>logic</code> 值，它有 3 个可能的值：S0、S1、S2。<code>state</code> 和 <code>next_state</code> 都是 <code>statetype</code> 类型的信号。枚举编码默认为数字排序：S0=00、S1=01、S2=10。编码可以由用户显示设置，比如下面的代码将状态编码为 3 位的独热值。</p>
+<pre><code class="language-verilog">typedef enum logic [2:0] {S0=3'b001, S1=3'b010, S2=3'b100} statetype;
+</code></pre>
+<p>因为下一个状态逻辑必须是组合逻辑，所以 <code>case</code> 语句中的 <code>default</code> 是必需的。</p>
+<h1 id="7-数据类型">7 数据类型</h1>
+<p>在 Verilog 中，如果信号出现在 <code>always</code> 模块中 <code>&lt;=</code> 或 <code>=</code> 的左边，那么它必须声明为 <code>reg</code>。否则，它应该声明为 <code>wire</code>。因此，一个 <code>reg</code> 信号可能是一个触发器、锁存器或者组合逻辑的输出，取决于敏感信号列表和 <code>always</code> 模块的语句。</p>
+<p>输入和输出端口默认为 <code>wire</code> 类型，除非它们的类型被明确定义为 <code>reg</code>。下面的例子展示了如何使用传统 Verilog 来描述触发器。其中 clk 和 d 默认为 <code>wire</code> 类型，而 q 则明确定义为 <code>reg</code> 类型，因为 q 出现在 <code>always</code> 模块中 <code>&lt;=</code> 的左边。</p>
+<pre><code class="language-verilog">module flop (
+    input            clk,
+    input      [3:0] d,
+    output reg [3:0] q
+);
+    always @(posedge clk)
+        q &lt;= d;
+endmodule
+</code></pre>
+<p>SystemVerilog 引入 <code>logic</code> 类型，<code>logic</code> 类型是 <code>reg</code> 类型的同义词，避免误导用户它实际上是否是一个触发器的猜想。SystemVerilog 允许 <code>logic</code> 变量在 <code>always</code> 模块的外面使用，而传统语法要求在 <code>always</code> 模块的外面使用 <code>wire</code> 变量。因此，几乎所有的 SystemVerilog 信号都可以是 <code>logic</code> 类型，除了有多个驱动源的信号必须声明为 <code>net</code> 类型。</p>
+<p><code>net</code> 最常用的类型是 <code>wire</code> 或 <code>tri</code>，这两种类型是同义的，但是传统上 <code>wire</code> 类型用于单信号源驱动，<code>tri</code> 类型用于多信号源驱动。在 SystemVerilog 中，wire 类型已废弃，因为 <code>logic</code> 类型更常用于单驱动源信号。</p>
+<p>当 <code>tri</code> 变量由一个或多个信号源驱动为某个值时，它就呈现那个值。当它未被驱动时，它呈现浮空值 (z)。当它被多个信号源驱动为不同的值时，它呈现为不确定值 (x)。同时也存在其他使用不同方法解决未驱动或者多驱动源问题的 <code>net</code> 类型。这些类型很少使用，但可以在任何使用 <code>tri</code> 类型的地方作为<code>tri</code> 的替代。</p>
+<figure data-type="image" tabindex="7"><img src="https://s2.loli.net/2022/05/23/aeSA46MKyJzbGcx.png" alt="net 解决方案" width="394" height="180" loading="lazy"></figure>
+<h1 id="8-参数化模块">8 参数化模块</h1>
+<p>使用参数化模块，HDL 允许可变的位宽度。下面的例子描述了一个默认宽度为 8 的参数化的 2:1 复用器。SystemVerilog 允许在输入和输出之前使用 <code>#(parameter...)</code> 语句定义参数。例子中的 <code>parameter</code> 语句包括一个默认值，称为 <code>width</code>，输入和输出的位数依赖于这个参数。</p>
+<pre><code class="language-verilog">module mux2 
+    #(parameter width = 8)
+    (
+        input  logic [width-1:0]  d0, d1,
+        input  logic              s,
+        output logic [width-1:0]  y
+    );
+    
+    assign y=s ? d1 : d0;
+endmodule
+</code></pre>
+<p>下面的例子使用 2:1 复用器 <code>mux2</code> 创建一个 8 位和一个 12 位的 4:1 复用器。8 位 4:1 复用器使用它们默认宽度实例化 3 个 2:1 复用器，12 位 4:1 复用器使用 <code>#()</code> 重写默认宽度。</p>
+<pre><code class="language-verilog">module mux4_8 (
+    input  logic [7:0] d0, d1, d2, d3,
+    input  logic [7:0] s,
+    output logic [7:0] y
+);
+    logic [7:0] low, hi;
+
+    mux2 lowmux(d0, d1, s[0], low);
+    mux2 himux(d2, d3, s[0], hi);
+    mux2 outmux(low, hi, s[1], y);
+endmodule
+
+module mux4_12 (
+    input  logic [11:0] d0, d1, d2, d3,
+    input  logic [1:0] s,
+    output logic [11:0] y
+);
+    logic [11:0] low, hi;
+
+    mux2 #(12) lowmux(d0, d1, s[0], low);
+    mux2 #(12) himux(d2, d3, s[0], hi);
+    mux2 #(12) outmux(low, hi, s[1], y);
+endmodule
+</code></pre>
+<p>HDL 还提供 <code>generate</code> 语句产生基于参数值的可变数量的硬件，<code>generate</code> 支持 <code>for</code> 循环和 <code>if</code> 语句来确定产生多少和什么类型的硬件。下面的例子说明如何使用 <code>generate</code> 语句产生一个由 2 输入与门级联构成的 N 输入 AND 功能。⚠️使用 <code>generate</code> 语句必须注意，它很容易不经意地生成大量的硬件。</p>
+<pre><code class="language-verilog">module andN 
+    #(parameter width = 8)
+    (
+        input  logic [width-1:0]  a,
+        output logic              y
+    );
+    genvar i;
+    logic [width-1:0] x;
+
+    generate
+        assign x[0] = a[0];
+        for (i = 1; i &lt; width; i = i + 1) begin: forloop
+            assign x[i] = a[i] &amp; x[i-1];
+        end
+    endgenerate
+    
+    assign y = x[width-1];
+endmodule
+</code></pre>
+<h1 id="9-测试程序">9 测试程序</h1>
+<p><strong>测试程序</strong> (testbench) 是用于测试其他模块 (称为<strong>被测设备</strong> (Device Under Test, DUT)) 的硬件描述语言模块。测试程序包含了向被测设备提供输入的语句，以便检查是否产生理想的正确输出。输入和期待的输出模式称为<strong>测试向量</strong> (test vector)。</p>
+<p>考虑测试 1.1 节中计算 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>y</mi><mo>=</mo><mover accent="true"><mi>a</mi><mo>ˉ</mo></mover><mover accent="true"><mi>b</mi><mo>ˉ</mo></mover><mover accent="true"><mi>c</mi><mo>ˉ</mo></mover><mo>+</mo><mi>a</mi><mover accent="true"><mi>b</mi><mo>ˉ</mo></mover><mover accent="true"><mi>c</mi><mo>ˉ</mo></mover><mo>+</mo><mi>a</mi><mover accent="true"><mi>b</mi><mo>ˉ</mo></mover><mi>c</mi></mrow><annotation encoding="application/x-tex">y=\bar{a} \bar{b} \bar{c}+a \bar{b} \bar{c}+a \bar{b} c</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.9145499999999999em;vertical-align:-0.08333em;"></span><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.56778em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathdefault">a</span></span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.25em;">ˉ</span></span></span></span></span></span><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8312199999999998em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathdefault">b</span></span></span><span style="top:-3.26344em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.25em;">ˉ</span></span></span></span></span></span><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.56778em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathdefault">c</span></span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.19444em;">ˉ</span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.9145499999999999em;vertical-align:-0.08333em;"></span><span class="mord mathdefault">a</span><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8312199999999998em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathdefault">b</span></span></span><span style="top:-3.26344em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.25em;">ˉ</span></span></span></span></span></span><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.56778em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathdefault">c</span></span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.19444em;">ˉ</span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.8312199999999998em;vertical-align:0em;"></span><span class="mord mathdefault">a</span><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8312199999999998em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathdefault">b</span></span></span><span style="top:-3.26344em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.25em;">ˉ</span></span></span></span></span></span><span class="mord mathdefault">c</span></span></span></span> 的 sillyfunction 模块，可以通过提供所有 8 个可能的测试向量来执行全部的测试。下面的例子说明了一个简单的测试程序，它实例化 DUT，之后提供输入。阻塞式赋值和延迟用于提供合适的输入顺序，使用者必须检查模拟结果以验证是否产生正确输出。测试程序也像其他的 HDL 模块那样被模拟，然而它们不能被综合。</p>
+<pre><code class="language-verilog">module testbench1 ();
+    logic a, b, c, y;
+
+    // instantiate DUT
+    sillyfunction dut(a, b, c, y);
+    // apply inputs one at a time
+    initial begin
+        a=0; b=0; c=0; #10;
+        c=1;           #10;
+        b=1; c=0;      #10;
+        c=1;           #10;
+        a=1; b=0; c=0; #10;
+        c=1;           #10;
+        b=1; c=0;      #10;
+        c=1;           #10;
+    end
+endmodule
+</code></pre>
+<p>模拟开始时 <code>initial</code> 语句执行该段内的语句。在上面的例子中，它首先提供输入模式 000，然后等待 10 个时间单位。然后提供 001，等待 10 个时间单位，以此类推，直到提供了所有 8 个可能的输入。<code>initial</code> 语句只能在测试程序上用于模拟，不能用于综合为实际硬件的模块中。</p>
+<p>检查输出是否正确的过程比较枯燥且容易出错，一个更好的方法是编写自检测试程序。下面的例子展示了这一做法。其中 <code>assert</code> 语句检查特定条件是否成立，如果不成立则执行 <code>else</code> 语句。<code>else</code> 语句中的 <code>$error</code> 系统任务用于输出描述 <code>assert</code> 错误的错误信息。在 SystemVerilog 中，可以在不包括 x 和 z 值的信号之间使用 <code>==</code> 或者 <code>!=</code> 进行比较。测试程序分别使用 <code>===</code> 和 <code>!==</code> 运算符判断相等或不相等，因为这些运算符可以对包含 x 和 z 的运算数正确操作。</p>
+<pre><code class="language-verilog">module testbench2();
+    logic a, b, c, y;
+
+     // instantiate DUT
+    sillyfunction dut(a, b, c, y);
+    // apply inputs one at a time
+    // checking results
+    initial begin
+        a=0; b=0; c=0; #10;
+        assert (y === 1) else $error(&quot;000 failed.&quot;);
+        c=1;           #10;
+        assert (y === 0) else $error(&quot;001 failed.&quot;);
+        b=1; c=0;      #10;
+        assert (y === 0) else $error(&quot;010 failed.&quot;);
+        c=1;           #10;
+        assert (y === 0) else $error(&quot;011 failed.&quot;);
+        a=1; b=0; c=0; #10;
+        assert (y === 1) else $error(&quot;100 failed.&quot;);
+        c=1;           #10;
+        assert (y === 1) else $error(&quot;101 failed.&quot;);
+        b=1; c=0;      #10;
+        assert (y === 0) else $error(&quot;110 failed.&quot;);
+        c=1;           #10;
+        assert (y === 0) else $error(&quot;111 failed.&quot;);
+    end
+endmodule
+</code></pre>
+<p>为每个测试向量编写代码依然是冗繁的工作，尤其是需要大量测试向量的模块中。一个比较好的方法是把测试向量放在一个单独的文件中。测试程序简单地从文件中读取测试向量，向 DUT 输入测试向量，检查 DUT 输出值是否与输出向量一致，重复这个过程直到测试向量文件的结尾。</p>
+<p>下面的例子说明了这种测试程序，它使用没有敏感信号列表的 <code>always</code> 语句产生一个时钟，这样它会连续不断地重复运行。在模拟的开始，它从一个文本文件读取测试向量，提供两个周期的 <code>reset</code> 脉冲。虽然时钟信号和复位信号在组合逻辑测试中不是必需的，但它们也包含在代码中，因为它们在测试时序 DUT 中是很重要的。<code>example.tv</code> 是包含二进制格式输入和期待输出的文本文件：</p>
+<pre><code class="language-plaintext">000_1
+001_0
+010_0
+011_0
+100_1
+101_1
+110_0
+111_0
+</code></pre>
+<pre><code class="language-verilog">module testbench3 ();
+    logic        clk, reset;
+    logic        a, b, c, y, yexpected;
+    logic [31:0] vectornum, errors;
+    logic [3:0]  testvectors[10000:0];
+
+    // instantiate DUT
+    sillyfunction dut(a, b, c, y);
+
+    // generate clock
+    always
+        begin
+            clk=1; #5; clk=0; #5;
+        end
+    
+    // at start of test, load vectors and pulse reset
+    initial
+        begin
+            $readmemb(&quot;example.tv&quot;, testvectors);
+            vectornum=0; errors=0;
+            reset=1; #27; reset=0;
+        end
+    
+    // apply test vectors on rising edge of clk
+    always @(posedge clk)
+        begin
+            #1; {a, b, c, yexpected} = testvectors[vectornum];
+        end
+    
+    // check results on falling edge of clk
+    always @(negedge clk)
+        if (~reset) begin // skip during reset
+            if (y !== yexpected) begin // check result
+                $display(&quot;Error: inputs=%b&quot;, {a, b, c});
+                $display(&quot; outputs=%b (%b expected)&quot;, y, yexpected);
+                errors = errors + 1;
+            end
+            vectornum = vectornum + 1;
+            if (testvectors[vectornum] === 4'bx) begin
+                $display(&quot;%d tests complete with %d errors&quot;, vectornum, errors);
+                $finish;
+            end
+        end
+endmodule
+</code></pre>
+<p><code>$readmem</code> 将二进制数字文件读入 testvectors 数组中，<code>$readmemh</code> 与之相似，但它读取十六进制数字的文件。代码的下一块在时钟的上沿后等待一个时间单位，然后根据当前测试向量中的 4 位设置 3 位输入 (a、b 和 c) 和期望的输出 (yexpected)。测试程序将期望的输出 yexpected 与生成的输出 y 比较，如果它们不相等则输出一条错误信息。这个进程重复直到 testvectors 数组中没有更多可用的测试向量，<code>$finish</code> 结束模拟。</p>
+<h1 id="10-总结">10 总结</h1>
+<p>对于现代数字设计人员，HDL 是十分重要的工具。学会了 SystemVerilog 或者 VHDL，就可以比手工绘制图表更快地描述数字系统。而且因为修改时只需要修改代码，而不是烦琐地重绘电路图，所以调试周期也会很快。</p>
+<p>硬件描述语言用于模拟和综合。在系统转化为硬件前逻辑模拟是在计算机上进行测试的有效方法。模拟器可以检测物理硬件中不可能被测量的系统中的信号值。逻辑综合把硬件描述语言代码转换成数字逻辑电路。</p>
+<p>最重要的是：编写 HDL 代码是描述一个真实存在的硬件，而不是编写一个软件程序。很多初学者的常见错误是不考虑准备产生的硬件而编写 HDL 代码。应该从画系统的结构图开始，区分哪些部分是组合逻辑，哪些部分是时序逻辑或者有限状态机。然后使用可以描述目标硬件的正确风格为每一个部分编写 HDL 代码。</p>
+
+                </div>
+                <div class="clear"></div>
+              </section>
+            </article>
+            <div class="clear"></div>
+
+        
+
+            <section class="related section">
+              
+              <article class="prev grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://SylvanasQAQ.github.io/post-images/bt9ZR2x4y.jpg');"></div>
+                 <a href="https://SylvanasQAQ.github.io/post/bt9ZR2x4y/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="05-27-2022">05-27-2022</time>
+                  <h4 class="title white no-margin">Vitis HLS 实现手写数字识别</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://SylvanasQAQ.github.io/media/images/left-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+              
+              <article class="next grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://SylvanasQAQ.github.io/post-images/0_rHJUypa.jpg');"></div>
+                 <a href="https://SylvanasQAQ.github.io/post/0_rHJUypa/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="04-29-2022">04-29-2022</time>
+                  <h4 class="title white no-margin">第 6 章家庭作业</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://SylvanasQAQ.github.io/media/images/right-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+
+                <div class="clear"></div>
+            </section>
+
+              <div class="clear"></div>
+              
+            
+              <div id="comments" class="bg-white hosted ">
+                <div class="clear"></div>
+<script>
+jQuery(document).ready(function($){
+    $('.vemoji-btn').text('😀');
+    $("#comments").on('click', 'span.vat',function(){
+        $(this).parent('div.vmeta').next("div.vcontent").after($("div.vwrap"));
+        $('textarea#veditor').focus();
+    })
+    if(window.location.hash){
+        var checkExist = setInterval(function() {
+            if ($(window.location.hash).length) {
+                $('html, body').animate({scrollTop: $(window.location.hash).offset().top-200}, 600);
+                clearInterval(checkExist);
+            }
+        }, 100);
+    }
+})
+</script>
+
+              </div>
+            
+
+            </div>
+          </div>
+      </main>
+
+          <footer id="footer" class="grid-container">
+        <div class="widgets row gradient-effect">
+            <div class="default-sidebar border-effect">
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_epcl_posts_thumbs underline-effect">
+                  <h4 class="widget-title title white bordered">最新文章</h4>
+                  
+                  
+                  <article class="item post-0 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://SylvanasQAQ.github.io/post/bt9ZR2x4y/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://SylvanasQAQ.github.io/post-images/bt9ZR2x4y.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="05-27-2022">05-27-2022</time>
+                      <h4 class="title usmall">
+                        <a href="https://SylvanasQAQ.github.io/post/bt9ZR2x4y/">Vitis HLS 实现手写数字识别</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-1 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://SylvanasQAQ.github.io/post/PGELKesQU/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://SylvanasQAQ.github.io/post-images/PGELKesQU.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="05-19-2022">05-19-2022</time>
+                      <h4 class="title usmall">
+                        <a href="https://SylvanasQAQ.github.io/post/PGELKesQU/">Verilog 语法</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-2 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://SylvanasQAQ.github.io/post/0_rHJUypa/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://SylvanasQAQ.github.io/post-images/0_rHJUypa.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="04-29-2022">04-29-2022</time>
+                      <h4 class="title usmall">
+                        <a href="https://SylvanasQAQ.github.io/post/0_rHJUypa/">第 6 章家庭作业</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_tag_cloud underline-effect">
+                  <h4 class="widget-title title white bordered">标签云</h4>
+                  <div class="tagcloud">
+                    
+                      <a href="https://SylvanasQAQ.github.io/tag/8q-hvEy6h/" class="ctag ctag-0 ctag-8q-hvEy6h" aria-label="">FPGA</a>
+                    
+                      <a href="https://SylvanasQAQ.github.io/tag/6PZSNKfJ9/" class="ctag ctag-1 ctag-6PZSNKfJ9" aria-label="">CSAPP</a>
+                    
+                  </div>
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="epcl_about-2" class="widget widget_epcl_about underline-effect">
+                  <h4 class="widget-title title white bordered">关于我</h4>
+                  <div class="avatar">
+                    <a href="" class="translate-effect thumb"><span class="fullimage cover" style="background-image: url(https://SylvanasQAQ.github.io/images/avatar.png);"></span></a>
+                  </div>
+                  <div class="info">
+                    <h4 class="title small author-name gradient-effect no-margin"><a href="https://SylvanasQAQ.github.io/post/about ">Ayanami&#39;s blog</a></h4>
+                    <p class="founder">Life feeds on negative entropy</p>
+                    <div class="social">
+                      
+                          
+                            <a href="https://github.com/SylvanasQAQ" class="translate-effect" target="_blank"><i class="fa fa-github"></i></a>
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                    </div> 
+                  </div>
+                  <div class="clear"></div>
+                  </section>
+              </div>
+
+            </div>
+            <div class="clear"></div>
+        </div>
+
+        <div class="logo">
+          <a href="https://SylvanasQAQ.github.io"><img src="/media/images/gridea.png" alt=""></a>
+        </div>
+        <p class="published border-effect">
+          ©2022 共 6 篇文章
+          <br/>
+          Theme <a href="https://gridea.dev/" target="_blank">「breek」</a> Powered by <a href="https://gridea.dev/" target="_blank">「Gridea」</a>
+        </p>
+        
+        <a href="javascript:void(0)" id="back-to-top" class="epcl-button dark" style="display:none">
+          <i class="fa fa-arrow"></i>
+        </a>
+
+        <a href="javascript:void(0)" id="md-toc" class="epcl-button dark" style="display:none">
+          <i class="fa"><svg t="1650112028452" class="icon" viewBox="0 -150 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2752" width="30" height="30"><path d="M124 256.992q0-26.016 18.496-44.512t44.512-18.496 44.512 18.496 18.496 44.512-18.496 44.512T187.008 320t-44.512-18.496-18.496-44.512z m732 29.024H357.984q-15.008 0-25.504-10.496t-10.496-25.504q0-15.008 10.496-25.504t25.504-10.496H856q15.008 0 25.504 10.496t10.496 25.504q0 15.008-10.496 25.504t-25.504 10.496zM124 512q0-26.016 18.496-44.512t44.512-18.496 44.512 18.496T250.016 512t-18.496 44.512-44.512 18.496-44.512-18.496T124 512z m732 28.992H357.984q-15.008 0-25.504-10.496t-10.496-25.504q0-15.008 10.496-25.504t25.504-10.496H856q15.008 0 25.504 10.496t10.496 25.504q0 15.008-10.496 25.504t-25.504 10.496zM124 767.008q0-26.016 18.496-44.512T187.008 704t44.512 18.496 18.496 44.512-18.496 44.512-44.512 18.496-44.512-18.496-18.496-44.512z m732 28.992H357.984q-15.008 0-25.504-10.496t-10.496-25.504q0-15.008 10.496-25.504t25.504-10.496H856q15.008 0 25.504 10.496t10.496 25.504q0 15.008-10.496 25.504t-25.504 10.496z" p-id="2753" fill="#e8e8e8"></path></svg></i>
+        </a>
+    </footer>
+    
+    <div class="clear"></div>
+
+        
+<!-- <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/leancloud-storage/dist/av-min.js"></script> -->
+<script src="https://SylvanasQAQ.github.io/media/js/av-min.js"></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/valine/1.3.10/Valine.Pure.min.js"></script>
+<script>
+    new Valine({
+        el: '#comments',
+        appId: 'eRwxRootBaBzDBwoutG7bLYE-gzGzoHsz' ,
+        appKey: '7NuCOYYcsdap67sNFgVsIHUm',
+        pageSize: 30,
+        placeholder: '既然来了，那就留个痕迹吧~',
+        visitor: true // 阅读量统计
+    })
+</script>
+    
+
+      
+    <script src="https://SylvanasQAQ.github.io/media/js/functions-post.js"></script>
+     <script>
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+	  let halfHeight = document.body.clientHeight*0.8;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop+halfHeight) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop+halfHeight) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    
+
+
+      (function ($) {
+            "use strict";
+                var bt;
+                var isHiden = true;
+
+                window.onmouseup = function(obj){
+                    if(obj.toElement.className == "epcl-button dark" || obj.toElement.className instanceof SVGAnimatedString || obj.toElement.className == "bg-white hosted v" || obj.toElement.className == "toc-container")
+                        return;
+                    if (isHiden == false) {
+                        $('#sidebar11').animate({ right: '-400px' }); //目录块向左移动
+                        isHiden = !isHiden;
+                    }
+                };
+
+                bt = $('#md-toc');
+                $(window).scroll(function () {
+                    var st;
+                    st = $(window).scrollTop();
+                    return bt.css('display', 'block');
+                });
+                return bt.on('click', function (event) {
+                    if (isHiden) {
+                        $('#sidebar11').animate({ right: '0' }).show();//目录块向右移动
+                    } else {
+                        $('#sidebar11').animate({ right: '-400px' }); //目录块向左移动
+                    }
+                    isHiden = !isHiden;
+                    return false;
+                });
+        })(jQuery);
+    </script>
+
+    </div>
+    <!-- end: #wrapper -->
+  </body>
+</html>
